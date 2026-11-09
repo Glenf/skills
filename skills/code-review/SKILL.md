@@ -18,8 +18,9 @@ missed.
 Three lenses run independently because each catches what the others miss. A
 change can satisfy the spec and still be wrong (Correctness). It can be correct
 and break the repo's conventions (Standards). It can follow every convention
-and implement the wrong thing (Spec). Keep the reports separate; do not rerank
-across lenses.
+and implement the wrong thing (Spec). Keep the reports separate. Never merge,
+deduplicate, or rerank findings across lenses; each lens's report stands on its
+own.
 
 ## Process
 
@@ -94,20 +95,22 @@ intent, standards paths, and spec where applicable.
 No lens does another's job: Correctness does not grade style, Standards does
 not re-litigate the spec, Spec does not review code quality.
 
-### 6. Aggregate
+### 6. Assemble each lens, separately
 
 Read [`references/report.md`](references/report.md) for the finding schema.
 
 For each lens, independently:
 
-1. Open the cited file and line. Drop any finding the diff does not support.
-2. Deduplicate findings that describe the same defect.
-3. Assign severity and confidence. Keep the evidence quote.
-4. Keep low-confidence findings only when the consequence is material; mark
-   them Advisory.
+1. Open the cited file and line. Drop any finding the diff does not support,
+   and name the drop in Coverage.
+2. Within that lens only, collapse exact repeats. Keep the lens's own severity,
+   confidence, and order.
+3. Keep low-confidence findings only when the consequence is material; mark
+   them Advisory without changing their severity.
 
-Do not merge findings across lenses. The same line can be a Correctness finding
-and a Standards finding; report both, under their own headings.
+Never merge, deduplicate, or rerank across lenses. The same line can be a
+Correctness finding and a Standards finding; report both, under their own
+headings, in the order each lens returned them.
 
 ### 7. Report
 

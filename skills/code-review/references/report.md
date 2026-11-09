@@ -24,19 +24,20 @@ Advisory findings carry the label:
 
 A finding without a file, line, and quoted hunk is not a finding. Drop it.
 
-## Validate and deduplicate
+## Validate, do not merge
 
 Per lens, in this order:
 
 1. **Open the cite.** Read the file at that line and the surrounding path. Drop
-   the finding if the diff does not support it.
+   the finding if the diff does not support it, and name the drop in Coverage.
 2. **Check the consequence.** If you cannot say what breaks and for whom,
    downgrade to Advisory or drop it.
-3. **Deduplicate.** Two findings describing the same defect become one; keep
-   the stronger evidence and the higher severity.
-4. **Do not merge across lenses.** The same line may be a Correctness finding
-   and a Standards finding. They stay under their own headings. Agreement
-   between lenses does not raise a severity.
+3. **Collapse exact repeats within the lens.** Keep the first occurrence and
+   its severity. Do not combine findings or choose between severities.
+4. **Never merge across lenses.** The same line may be a Correctness finding
+   and a Standards finding. They stay under their own headings, in the order
+   their lens returned them, with their own severity. Agreement between lenses
+   is not a promotion, and disagreement is not a conflict to resolve.
 
 ## Report template
 
@@ -72,14 +73,15 @@ Per lens, in this order:
 - **Standards:** <n> findings; worst: <P0-P3> <one line>
 - **Spec:** <n> findings; worst: <P0-P3> <one line> — or "skipped (no spec)"
 
-### Actionable
+### Actionable, by lens
 
-1. <P0/P1 finding, one line>
-2. <P0/P1 finding, one line>
+- **Correctness:** <P0/P1 findings, in lens order, or "nothing blocking">
+- **Standards:** <P0/P1 findings, in lens order, or "nothing blocking">
+- **Spec:** <P0/P1 findings, in lens order, or "nothing blocking">
 ```
 
-The Actionable list contains only P0 and P1 findings, in report order. If there
-are none, write "Nothing blocking."
+Each lens keeps its own order. Do not build a single cross-lens list, and do
+not put one lens's finding ahead of another's.
 
 ## Rules
 
@@ -87,6 +89,9 @@ are none, write "Nothing blocking."
   creation in this turn.
 - **No findings is a valid result.** Say so per lens; do not pad.
 - **Every finding has evidence.** Quote, cite, and name the consequence.
+- **No cross-lens merge.** Findings stay under the lens that raised them, in
+  that lens's order, with that lens's severity. The same defect reported by two
+  lenses is two findings, not one.
 - **Worst per lens, no cross-lens winner.** The axes are deliberately separate.
 - **Coverage is honest.** Name the lenses that ran, the risk checks selected,
   the lenses skipped and why, and anything the review could not establish. A
