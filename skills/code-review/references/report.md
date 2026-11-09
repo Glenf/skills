@@ -48,9 +48,10 @@ Per lens, in this order:
 ### Coverage
 
 - **Commits:** <n>: <oneline list>
-- **Spec:** <path, or "none">
+- **Spec:** <path, or "skipped: none provided">
 - **Standards:** <paths, or "no documented standards found">
 - **Risk checks:** <selected>; not selected: <the rest>
+- **Skipped:** <lens and why, or "none">
 - **Not checked:** <anything the review could not establish>
 
 ### Correctness
@@ -63,13 +64,13 @@ Per lens, in this order:
 
 ### Spec
 
-<findings, or "No spec available.">
+<findings, or "Skipped: no spec provided.">
 
 ## Summary
 
 - **Correctness:** <n> findings; worst: <P0-P3> <one line>
 - **Standards:** <n> findings; worst: <P0-P3> <one line>
-- **Spec:** <n> findings; worst: <P0-P3> <one line>
+- **Spec:** <n> findings; worst: <P0-P3> <one line> — or "skipped (no spec)"
 
 ### Actionable
 
@@ -88,8 +89,8 @@ are none, write "Nothing blocking."
 - **Every finding has evidence.** Quote, cite, and name the consequence.
 - **Worst per lens, no cross-lens winner.** The axes are deliberately separate.
 - **Coverage is honest.** Name the lenses that ran, the risk checks selected,
-  and anything the review could not establish. A missing spec is named, not
-  silently skipped.
+  the lenses skipped and why, and anything the review could not establish. A
+  skipped lens is named, not silently omitted.
 - **Keep it readable.** One finding per heading, no walls of prose. A reviewer
   should be able to act on the report without opening the diff for the P0/P1
   items.

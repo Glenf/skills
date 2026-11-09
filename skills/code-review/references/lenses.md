@@ -9,6 +9,17 @@ Paste one brief per sub-agent call. Every call also gets:
 - the finding schema from [`report.md`](report.md)
 - the spec path or contents (Spec lens only)
 
+## Preconditions
+
+A brief runs only when its input exists. Check before dispatching; do not send
+an agent to report that it has nothing to review.
+
+| Lens | Needs | If missing |
+|---|---|---|
+| Correctness | the pinned diff | stop the review |
+| Standards | the pinned diff; documented rules optional | run on the smell baseline |
+| Spec | a spec | skip the lens, record it in Coverage |
+
 Shared output shape:
 
 ```
@@ -112,8 +123,8 @@ Report:
   implementation contradicts the spec.
 
 Rules: quote the spec line for every finding. Do not invent a requirement the
-spec does not state. Do not review code quality. If the spec is absent, return
-"no spec available" and stop.
+spec does not state. Do not review code quality. If no spec exists, this lens
+is skipped and never dispatched.
 
 ## Keeping the lenses apart
 

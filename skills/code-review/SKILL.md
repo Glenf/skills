@@ -43,9 +43,9 @@ In order:
 
 1. Issue references in the commit messages (`#123`, `Closes #45`, `!67`).
 2. A path the user passed.
-3. A spec under `docs/`, `specs/`, or `.scratch/` matching the branch or
-   feature.
-4. Ask. If there is no spec, say so and skip the Spec lens.
+3. A spec under `docs/`, `specs/`, or other project defined path.
+4. Ask. If the user says there is no spec, skip the Spec lens and record it in
+   Coverage.
 
 ### 3. Find the standards
 
@@ -63,13 +63,25 @@ Three lines, from the commits and the spec: what the change is meant to make
 true, and what it deliberately does not touch. Every reviewer receives it. It
 stops a reviewer from inventing a requirement the change never had.
 
-### 5. Dispatch three reviewers in parallel
+### 5. Dispatch the reviewers that have inputs
 
-Issue all three sub-agent calls together, in the foreground. Fresh context for
-each; none inherits this conversation. The full briefs are in
-[`references/lenses.md`](references/lenses.md); paste the relevant one into
-each call along with the diff command, commit list, intent, standards paths,
-and spec.
+Issue the selected sub-agent calls together, in the foreground. Fresh context
+for each; none inherits this conversation. A lens without its input is not
+dispatched: an agent asked to review against a spec that does not exist can
+only report that it has nothing to do.
+
+| Lens | Runs when | Skip when |
+|---|---|---|
+| Correctness | always, once the diff is pinned | never |
+| Standards | always; documented rules when present, smell baseline otherwise | never |
+| Spec | a spec exists after step 2 | no spec was provided or found |
+
+Name every skipped lens in Coverage and say why. Skipping is a coverage fact,
+not a silent omission.
+
+The full briefs are in [`references/lenses.md`](references/lenses.md); paste
+the relevant one into each call along with the diff command, commit list,
+intent, standards paths, and spec where applicable.
 
 - **Correctness** — bugs, regressions, edge cases, error paths, state, and the
   conditional risks the diff actually touches: security, performance,
