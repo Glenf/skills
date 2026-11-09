@@ -162,8 +162,8 @@ and the diff is as small as the intent allows.
 
 ## Beat 3 — Follow the practice
 
-**Gate:** the requested outcome is proven by direct evidence, the log is
-complete, and the handover names every gap.
+**Gate:** the requested outcome is proven by direct evidence, the change is
+reviewed, the log is complete, and the handover names every gap.
 
 ### Prove the outcome
 
@@ -172,6 +172,14 @@ complete, and the handover names every gap.
   persisted state, the diff.
 - Report what was checked and what it showed; name what remains unverified.
 - A passing test proves what it checks, not the requested outcome.
+
+### Review before handover
+
+- Run the `code-review` skill against the fixed point: the branch base, the
+  ticket, and the spec.
+- Keep its lenses separate. Fix every P0/P1 finding, or record why not. P2/P3
+  findings go to the handover as found-not-fixed.
+- The review is evidence, not a substitute for the handover.
 
 ### Operate
 
@@ -211,4 +219,5 @@ Run against the diff, not from memory.
    defaulted; repeated operations idempotent; shared state has one writer.
 10. Performance changes name their measurement; the requested outcome was proven
     by direct evidence.
-11. Worktree clean; commits ordered and each says why, what, how proved.
+11. The change was reviewed; every P0/P1 finding is fixed or declared.
+12. Worktree clean; commits ordered and each says why, what, how proved.

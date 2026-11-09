@@ -14,9 +14,9 @@ npx skills update                      # update everything installed
 | Skill | What it does |
 | ----- | ------------ |
 | [code-review](skills/code-review) | Review a change on three independent lenses — correctness, standards, spec — run as parallel sub-agents, then report findings with severity, confidence, and file:line evidence. |
-| [find-the-core](skills/find-the-core) | Drills into the core of a vague task before executing it — Golden Circle fused with the 5 W's. |
+| [find-the-core](skills/find-the-core) | Drill into the core of a task before executing it, using Simon Sinek's Golden Circle (Why → How → What) fused with the journalist's 5 W's (Who / What / When / Where / Why). |
 | [glen-mode](skills/glen-mode) | Engineering discipline for a code change from first read to handover: make it work, make it right, follow the practice. |
-| [north-star](skills/north-star) | Distills a pile of wants into one north star sentence, with the Five W's beneath it. |
+| [north-star](skills/north-star) | Distill a pile of wants into one north star sentence, with the Five W's beneath it. |
 
 ## Layout
 
