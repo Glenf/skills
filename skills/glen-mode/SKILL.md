@@ -14,9 +14,10 @@ invariants hold, and its gaps are named. Working is the first beat, not the
 finish line.
 
 References: [`tests.md`](references/tests.md) for test method,
-[`judgment.md`](references/judgment.md) for drift, premises, root causes,
-refusals, docs vs code, and lineage, [`handover.md`](references/handover.md)
-for the report.
+[`signals.md`](references/signals.md) for CRAP, duplication, mutation, and
+coverage, [`judgment.md`](references/judgment.md) for drift, premises, root
+causes, refusals, structure sizing, docs vs code, and lineage,
+[`handover.md`](references/handover.md) for the report.
 
 ## Classify first
 
@@ -57,6 +58,8 @@ code when the change is reverted.
   tests that will break.
 - When a claim rests on "the system does X", name the observation that would
   settle it, then trace the executing path and check the authoritative artifact.
+- Read the area's vocabulary and decisions first: `GLOSSARY.md` and any ADR
+  that binds the changed code. Use their names, not invented ones.
 
 ### Frame the work
 
@@ -84,6 +87,15 @@ code when the change is reverted.
 - One decision in one place; one change does one thing. Record unrelated finds
   instead of fixing them here.
 - Build the smallest edit that solves the current slice.
+
+### Build the lever
+
+- If a step is not obvious at a glance and you will run it again, build the
+  tool: migration, fixture, rename, extraction, environment setup.
+- Do one unit by hand first. The hand-done unit is the specification; the tool
+  is wrong until it reproduces it.
+- Three repetitions earn a tool; two are a note. Keep it in `scripts/`,
+  `tools/`, or a temp dir — not in product code.
 
 ### Agree the seams and prove the slice
 
@@ -147,6 +159,11 @@ and the diff is as small as the intent allows.
   duplication.
 - For each finding: cite the evidence, name the smallest structural move.
 - Separate contract violations from taste. No concrete problem? Say so.
+- Check module depth: a narrow interface over rich internals. A shallow wrapper
+  is a smell; a deep module split across files is not.
+- Check file size: ~1000 lines is a comfortable read, ~2000 a split signal.
+  Never grow a file already over ~2000. Detail:
+  [`judgment.md`](references/judgment.md).
 
 ### Refactor without changing behaviour
 
@@ -155,10 +172,33 @@ and the diff is as small as the intent allows.
 - A test that had to change means behaviour changed by intent. Say which you
   are doing.
 
+### Clean
+
+- Naming, comments, and docs are the last pass: earned, not decorative.
+- A name carries what the type cannot. If a comment is needed to explain a
+  name, rename instead.
+- Comments say only what the code cannot: why this way, a hidden constraint, a
+  surprise. No restatement, no edit narration, no commented-out code.
+- Docs describe intent and operation, not current behaviour. Code is the
+  authority for what it does.
+- Leave the code you touched better; do not refactor what you did not touch.
+
 ### Make it fast, last
 
 - Measure, change one thing, measure again. No optimisation without a
   measurement, or outside scope.
+
+### Read the signals
+
+- **CRAP** — 1–5 low risk, 5–30 worth a look, 30+ complex and under-tested. At
+  full coverage the score equals cyclomatic complexity, so the threshold is
+  also a ceiling on branching.
+- **Duplication** — a reported duplicate is a question, not a command. Apply
+  the Rule of Three and the boundary test before extracting.
+- **Mutation** — a surviving mutant is a line no test would miss. Kill the
+  survivors in changed code; do not chase a global score.
+- **Coverage** — describes the suite, not the slice. Detail:
+  [`signals.md`](references/signals.md).
 
 ## Beat 3 — Follow the practice
 
@@ -187,6 +227,9 @@ reviewed, the log is complete, and the handover names every gap.
 - Guard the context: push bulk reading out, bring back the summary.
 - Commit small and ordered; each says why, what changed, how it was proved. A
   declared red intermediate commit is allowed; a red handover is not.
+- Reclaim the worktree: prove what is unused, confirm nothing still in use
+  needs it, then delete. Uncommitted work waits for a decision; it is never
+  removed.
 - Produce the report in [`handover.md`](references/handover.md): proven, tested,
   not tested and why, departures, blast radius.
 

@@ -37,6 +37,27 @@ somewhere quieter.
 Stop when the cause is corrected and the relevant paths are covered. Do not
 keep asking "why" past evidence, and do not widen into unrelated cleanup.
 
+## Structure sizing
+
+A deep module has a narrow public interface and rich internals. A shallow
+wrapper — one function per file, a pass-through layer — is a smell. Splitting a
+deep module across files behind the same interface is not.
+
+Files are read by humans and agents with finite context:
+
+- **Under ~1000 lines** — comfortable.
+- **1000–2000** — yellow flag. Split along an internal seam if one exists;
+  leave it if it is one indivisible thing.
+- **Over 2000** — split signal. The module can stay one; the implementation
+  fans out behind the same interface.
+
+Never grow a file already over ~2000 lines. New functionality goes into a
+sibling file behind the same module interface. Touching such a file? Leave it
+no bigger than you found it.
+
+Splitting does not make a module shallow: re-exporting from the module root
+keeps the public surface unchanged.
+
 ## Refused by default
 
 - **Premature abstraction.** Two similar things is a coincidence; three is a
