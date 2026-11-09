@@ -33,12 +33,15 @@ description() {
       desc = $0; grabbing = 1; next
     }
     grabbing {
+      if ($0 ~ /^[[:space:]]*$/) { next }
       if (/^[[:space:]]/) { line = $0; sub(/^[[:space:]]+/, "", line); desc = desc " " line; next }
       grabbing = 0
     }
     END {
       gsub(/^[[:space:]]+|[[:space:]]+$/, "", desc)
-      gsub(/^"|"$/, "", desc)
+      q = sprintf("%c", 39)
+      if (substr(desc, 1, 1) == "\"" || substr(desc, 1, 1) == q) desc = substr(desc, 2)
+      if (substr(desc, length(desc), 1) == "\"" || substr(desc, length(desc), 1) == q) desc = substr(desc, 1, length(desc) - 1)
       print desc
     }
   ' "$1"
@@ -67,7 +70,7 @@ for dir in "$REPO"/skills/*/; do
   case "$mode" in
     names) echo "$name" ;;
     md)    printf '| [%s](skills/%s) | %s |\n' "$name" "$name" \
-             "$(description "$dir/SKILL.md" | sed 's/\([.!?]\) .*/\1/')" ;;
+             "$(description "$dir/SKILL.md" | sed -E 's/([.!?])[[:space:]]+[[:upper:]].*/\1/')" ;;
     full)
       files=$(find "$dir" -type f ! -name '.DS_Store' | wc -l | tr -d ' ')
       [ "$files" -eq 1 ] && unit=file || unit=files

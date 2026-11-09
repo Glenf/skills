@@ -64,7 +64,7 @@ for name in "${names[@]}"; do
       current="$(readlink "$link")"
       if [ "$unlink" -eq 1 ]; then
         case "$current" in
-          "$REPO"/*) echo "unlink $link"; run rm "$link" ;;
+          "$REPO"/skills/*) echo "unlink $link"; run rm "$link" ;;
           *) echo "keep $link: points outside this repo ($current)" ;;
         esac
       elif [ "$current" = "$src" ]; then
