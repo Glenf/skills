@@ -1,39 +1,25 @@
 # Reviewer briefs
 
-Paste one brief per sub-agent call. Every call also gets:
+Paste one brief per sub-agent call, plus:
 
 - the fixed point and the exact diff command
 - the commit list
 - the three-line intent
 - the standards paths
-- the finding schema from [`report.md`](report.md)
+- the Finding rules, Severity, and Finding format sections of
+  [`report.md`](report.md)
+- the Finding line and Language sections of the `ste-report` skill
 - the spec path or contents (Spec lens only)
 
-## Preconditions
-
-A brief runs only when its input exists. Check before dispatching; do not send
-an agent to report that it has nothing to review.
-
-| Lens | Needs | If missing |
-|---|---|---|
-| Correctness | the pinned diff | stop the review |
-| Standards | the pinned diff; documented rules optional | run on the smell baseline |
-| Spec | a spec | skip the lens, record it in Coverage |
-
-Shared output shape:
-
-```
-P<0-3> · <high|medium|low> · <path>:<line>
-Evidence: <quote the hunk, 1-4 lines>
-Why: <the consequence: who hits it, when, what breaks>
-Fix: <the smallest change>
-```
+Each lens stays in its own lane: Correctness asks _does it work?_, Standards
+_does it follow the repo?_, Spec _is it the right change?_. A defect that
+spans lanes is reported by each lens it belongs to.
 
 ## Correctness
 
 > You are the correctness reviewer. Find defects the diff introduces or fails
-> to prevent. Read the changed code and its callers. A finding needs a
-> file:line, a quoted hunk, and a consequence. Under 400 words.
+> to prevent. Read the changed code and its callers. Style, naming, and
+> structure belong to another lens unless they cause a defect. Under 400 words.
 
 Check:
 
@@ -49,7 +35,8 @@ Check:
 - **Regressions** — behaviour the diff changes without saying so.
 - **Tests** — would a test fail if the change were reverted? Is a gap named?
 
-Conditional risks — include only when the diff touches the surface:
+Conditional risks — check a row only when the diff touches its surface, and
+list which rows you checked:
 
 | Risk | Check when | Look for |
 |---|---|---|
@@ -60,24 +47,18 @@ Conditional risks — include only when the diff touches the surface:
 | Concurrency | locks, queues, retries, timeouts | two writers, lost update, retry storm, cancellation |
 | Reliability | jobs, retries, crash path | non-idempotent work, partial failure, no recovery |
 
-Rules: severity follows consequence, not certainty. Do not report style,
-naming, or structure unless it causes a defect. Do not report what tooling
-enforces.
-
 ## Standards
 
 > You are the standards reviewer. Grade the diff against the repository's
-> documented rules first, then the smell baseline. Cite the rule file and the
-> rule for a violation; name the smell and quote the hunk for a judgement call.
-> Under 400 words.
-
-Order:
+> documented rules first, then the smell baseline. Correctness and spec
+> coverage belong to other lenses unless a rule is also a defect. Under 400
+> words.
 
 1. **Documented rules** — every listed standards file, per changed file. A
-   breach is a hard violation. Quote the rule.
-2. **Smell baseline** — label each "possible <Smell>". Always a judgement
-   call. A documented repo standard overrides the baseline; suppress the smell
-   where the repo endorses the shape.
+   breach is a hard violation; quote the rule and its file.
+2. **Smell baseline** — a judgement call, labelled "possible <Smell>", with
+   the hunk quoted. Where the repo's rules endorse the shape, the rule wins
+   and the smell goes unreported.
 
 The baseline:
 
@@ -106,33 +87,16 @@ The baseline:
 - **Refused Bequest** — a subclass that ignores or overrides most of what it
   inherits. → composition instead of inheritance.
 
-Rules: skip what tooling enforces. Do not review the spec. Do not review
-correctness except where a rule is also a defect.
-
 ## Spec
 
-> You are the spec reviewer. Check the diff against the spec. Report each
-> finding with the exact spec line it violates. Under 400 words.
+> You are the spec reviewer. Check the diff against the spec, quoting the
+> exact spec line for every finding. Requirements come only from the spec's
+> text; code quality belongs to another lens. Under 400 words.
 
 Report:
 
-- **(a) Missing or partial** — a requirement the spec asked for that the diff
-  does not deliver, or delivers incompletely.
-- **(b) Scope creep** — behaviour in the diff that the spec did not ask for.
-- **(c) Wrong implementation** — a requirement that looks present but whose
-  implementation contradicts the spec.
-
-Rules: quote the spec line for every finding. Do not invent a requirement the
-spec does not state. Do not review code quality. If no spec exists, this lens
-is skipped and never dispatched.
-
-## Keeping the lenses apart
-
-| Lens | Owns | Refuses |
-|---|---|---|
-| Correctness | Does it work? | Style, naming, spec coverage |
-| Standards | Does it follow the repo? | Whether the change is wanted, whether it is correct |
-| Spec | Is it the right change? | How the code is written |
-
-A finding that spans lenses is reported once under each lens it genuinely
-belongs to, never merged into a single cross-lens finding.
+- **Missing or partial** — a requirement the diff does not deliver, or
+  delivers incompletely.
+- **Scope creep** — behaviour the spec did not ask for.
+- **Wrong implementation** — a requirement that looks present but contradicts
+  the spec.
