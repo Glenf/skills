@@ -130,6 +130,8 @@ and the diff is as small as the intent allows.
   same reason.
 - No abstraction without a present caller. If the code is already clear and
   local, leave it.
+- Run the `wet-or-dry` skill on the slice: it gives each copy and abstraction
+  a verdict with evidence.
 
 ### Harden
 
@@ -175,10 +177,15 @@ and the diff is as small as the intent allows.
 ### Clean
 
 - Naming, comments, and docs are the last pass: earned, not decorative.
-- A name carries what the type cannot. If a comment is needed to explain a
-  name, rename instead.
-- Comments say only what the code cannot: why this way, a hidden constraint, a
-  surprise. No restatement, no edit narration, no commented-out code.
+- A name carries what the type cannot.
+- Readable code needs no comment to explain how it works. When it does, make
+  it read: rename, extract, flatten, or tighten. Compact is fine when it reads
+  at a glance; indirection is not.
+- Comments are context, and context costs every reader. A comment earns its
+  line by saying what the code cannot: why this way, or a constraint forced
+  from outside the code — in one line where one will do. Ticket references
+  (`ABC-123`) go in the commit; restatement, edit narration, and commented-out
+  code go nowhere.
 - Docs describe intent and operation, not current behaviour. Code is the
   authority for what it does.
 - Leave the code you touched better; do not refactor what you did not touch.
@@ -262,5 +269,7 @@ Run against the diff, not from memory.
    defaulted; repeated operations idempotent; shared state has one writer.
 10. Performance changes name their measurement; the requested outcome was proven
     by direct evidence.
-11. The change was reviewed; every P0/P1 finding is fixed or declared.
-12. Worktree clean; commits ordered and each says why, what, how proved.
+11. Every comment in the diff says why or names an outside constraint; none
+    explains how, none cites a ticket.
+12. The change was reviewed; every P0/P1 finding is fixed or declared.
+13. Worktree clean; commits ordered and each says why, what, how proved.

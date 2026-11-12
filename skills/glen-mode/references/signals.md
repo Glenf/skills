@@ -61,6 +61,9 @@ A reported duplicate is a question, not a command.
 
 Ignore the finding when the answer is "they only look alike".
 
+The `wet-or-dry` skill runs these questions over a whole change, in both
+directions: copies to reuse or extract, and abstractions to inline or delete.
+
 ## Mutation
 
 Mutation testing is the closest mechanical analogue of "a test that fails
