@@ -1,0 +1,4 @@
+interface:
+  display_name: "Start With Why"
+  short_description: "Interview until the purpose is clear"
+  default_prompt: "Use $start-with-why to interview me until the real why is clear."
