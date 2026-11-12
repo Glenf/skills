@@ -11,8 +11,13 @@ nothing else — no application code, no client material.
 - **Names are global.** Installs land flat in `~/.agents/skills/<name>/` next to
   everyone else's skills. Pick a name unlikely to collide; avoid bare words like
   `research`, `review`, `plan`.
+- **Harness built-in skills do not count.** Skills that ship inside a harness
+  (Claude Code, Codex, OpenCode, or any other) are not used, so choose names
+  and `description:` triggers here as if they did not exist — the same name as
+  a built-in is fine.
 - **Only `SKILL.md` at a skill's root.** Everything else goes in `references/`,
-  `scripts/`, or `assets/`.
+  `scripts/`, `assets/`, or `agents/` (harness metadata, such as Codex's
+  `agents/openai.yaml`).
 - **Keep `SKILL.md` short.** It loads into context on every trigger. Past ~200
   lines, move detail into `references/` and link to it. Never duplicate a
   reference's content in `SKILL.md`.
@@ -21,6 +26,8 @@ nothing else — no application code, no client material.
 - **`description:` is the trigger.** Write it as the conditions under which the
   skill should fire, in the words a user would actually use. It is the only part
   of the skill the agent sees before deciding to load it.
+- **Use the glossary.** Skills use the terms in `GLOSSARY.md`. When a skill
+  introduces or sharpens a term, update the glossary in the same change.
 - **No confidential content.** This repo is public. No client names, no HTGP or
   Ikoni internal material, no credentials, no personal data.
 
