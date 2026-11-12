@@ -6,7 +6,7 @@
 - HumanLayer's `visual-pr` (MIT): the change outline as a set of views rather
   than a file-by-file changelog. The PR/MR stage will use `show-me` for it.
 
-- Matt Pocock's `improve-codebase-architecture` (its HTML report format): the
+- Matt Pocock's `improve-codebase-architecture` (MIT; its HTML report format): the
   Tailwind and Mermaid scaffold, the header legend, before/after side by side,
   the diagram patterns (cross-section, mass diagram, collapse), and the style
   rules.
