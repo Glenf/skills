@@ -40,8 +40,10 @@ Architecture and prototype sit off the main path.
 _Avoid_: Phase, step
 
 **Triage**:
-The intake gate for any work item, from a request, tracker, review, or
-retrospective: what it is, whether it is actionable, and which stage runs next.
+The recurring intake gate for any work item, from a request, tracker, review, or
+retrospective: what it is, whether it is actionable, which stage runs next, and
+one verdict with one next action. It runs at the start of a change and whenever
+new work arrives.
 _Avoid_: Intake, sorting, backlog grooming
 
 **Design**:
@@ -180,6 +182,24 @@ A finding from the retrospective that changes how the next change is done. It
 has a home: a skill, `AGENTS.md`, an ADR, or the glossary.
 _Avoid_: Learning, takeaway
 
+## Triage
+
+**Work item**:
+Anything triage receives, with its source: a request, tracker issue, spec task,
+review finding, retro lesson, bug report, metric target, or PR comment.
+_Avoid_: Ticket, issue, intake
+
+**Mechanical change**:
+A change with one obvious approach and a local blast radius, such as a rename, a
+version bump, or a one-line fix. It skips design.
+_Avoid_: Trivial change, small change
+
+**Verdict**:
+The decision a gate gives the thing in front of it. Triage gives do now, defer,
+reject, duplicate, or needs framing/info; `wet-or-dry` gives leave, reuse,
+extract, inline, or delete.
+_Avoid_: Recommendation, suggestion
+
 ## Review
 
 **Fixed point**:
@@ -226,11 +246,6 @@ concentrate at the callers, or only move there?
 Code in a change that repeats other code, in the diff or elsewhere in the repo.
 It is duplication only when both change for the same reason.
 _Avoid_: Clone, duplicate
-
-**Verdict**:
-The decision `wet-or-dry` gives each copy and abstraction: leave, reuse,
-extract, inline, or delete.
-_Avoid_: Recommendation, suggestion
 
 **View**:
 One picture of the work that makes one point — a call tree, a `diff` of a
