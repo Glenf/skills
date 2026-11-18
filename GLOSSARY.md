@@ -34,17 +34,93 @@ The full path of a code change, from framing the goal to the retrospective.
 _Avoid_: Workflow, pipeline, process
 
 **Stage**:
-One step of the cycle, run by one skill: frame, prototype, plan, spec and
-tasks, implement, simplify, review, PR/MR, retrospective.
+One step of the cycle, run by one skill: frame, triage, design, spec and tasks,
+implement, bug diagnosis, simplify, review, handover, retrospective.
+Architecture and prototype sit off the main path.
 _Avoid_: Phase, step
+
+**Triage**:
+The intake gate for any work item, from a request, tracker, review, or
+retrospective: what it is, whether it is actionable, and which stage runs next.
+_Avoid_: Intake, sorting, backlog grooming
+
+**Design**:
+The stage that settles the shape of one change: facts, decisions, acceptance
+criteria, and seams. It writes the design down for review, then writes the spec;
+both stay draft until approved.
+_Avoid_: Planning, architecture
+
+**Judgment call**:
+An open fork that no fact and no experiment can settle: the user must choose.
+Resolved by a judgment question, asked with the options, a recommendation, and
+what would change the answer.
+_Avoid_: Decision, open question
+
+**Empirical fork**:
+An open fork that a question to running code settles, not the user. Answered
+by `prototype`.
+_Avoid_: Spike, proof of concept
+
+**Architecture**:
+The stage that changes long-lived structure across the system: module
+boundaries, dependency direction, ADRs.
+_Avoid_: Design, big refactor
+
+**Spec**:
+The behaviour contract for a change: what becomes true, the acceptance
+criteria, and the seams. Written by `design`.
+_Avoid_: Requirements doc, PRD
+
+**Acceptance criterion**:
+A statement that can be observed from outside the code and is false before the
+change. Each names its proof on the real surface.
+_Avoid_: Done condition, success metric
+
+**Proof**:
+The direct check on the real surface that shows an acceptance criterion is
+true. A passing test is one kind of proof, not the gate.
+_Avoid_: Verification
+
+**Record**:
+The written trail of intent for a change: commits, PR/MR discussions, issues,
+ADRs, and release notes. The authority for why; code is the authority for what.
+_Avoid_: History, git log, archaeology
+
+**Inference**:
+A conclusion the record does not state, marked as yours. Never presented as
+what the authors meant.
+_Avoid_: Assumption, guess
+
+**Bug diagnosis**:
+The evidence-backed cause of a defect, with the boundary of the fix and the
+acceptance check it must satisfy. Produced by `bug-diagnose`; the fix follows.
+_Avoid_: Root cause analysis, postmortem
+
+**Hillclimb**:
+Sustained improvement of one metric against a target: one change, one
+measurement, keep or revert. A one-off fix is not a hillclimb.
+_Avoid_: Optimisation pass, tuning
+
+**Baseline**:
+The frozen measurement of the metric before the first change.
+_Avoid_: Starting point, control
+
+**Harness**:
+The repeatable command that produces the metric under a fixed workload, with
+its noise and work count visible.
+_Avoid_: Test, benchmark
+
+**Stop predicate**:
+The target plus a floor on attempts; the run ends only when both hold.
+_Avoid_: Goal, threshold
 
 **Gate**:
 The check that ends a stage or beat. The work moves on only when it passes.
 _Avoid_: Exit criteria, definition of done, checkpoint
 
 **Beat**:
-One of the three parts of implementation in `glen-mode`: make it work, make it
-right, follow the practice.
+One of the three parts of implementation: make it work, make it right, follow
+the practice.
 _Avoid_: Phase, pass
 
 **Slice**:
@@ -52,9 +128,24 @@ A thin end-to-end path through the system that delivers one behaviour. The
 first slice is the tracer bullet.
 _Avoid_: Layer, chunk
 
+**Tracer bullet**:
+The first slice: the smallest end-to-end path through the system, on real data.
+It proves the wiring before the path is widened.
+_Avoid_: Prototype, walking skeleton
+
 **Task**:
-One slice written down in the project's tracker, with its own acceptance check.
+One slice written down in the project's tracker, with its own acceptance check
+and stated boundaries.
 _Avoid_: Ticket, story, issue
+
+**Blocker**:
+A task whose output another task needs before it can start.
+_Avoid_: Dependency, prerequisite
+
+**Frontier**:
+The tasks whose blockers are all done; the set triage picks the next ready task
+from.
+_Avoid_: Backlog, queue
 
 **Build-up**:
 Implementation of new behaviour: make it work, make it right, make it fast.
@@ -73,6 +164,11 @@ _Avoid_: Tech debt, rot, legacy
 The report at the end of a change: what is proven, what is tested, what is not,
 departures, blast radius.
 _Avoid_: Summary, status update
+
+**Handoff**:
+A mid-change transfer of unfinished work to another agent or session, with the
+context to resume. Different from a handover, which ends the change.
+_Avoid_: Handover, session transfer
 
 **Blast radius**:
 Everything a change can affect: callers, public surface, stored data, formats,
@@ -102,10 +198,16 @@ _Avoid_: Issue, comment, remark
 
 ## Code design
 
+**Shape**:
+The structure of one change before it is sliced: types, signatures, module
+boundaries, and which owner holds each piece of state. Architecture is the
+structure that outlives the change.
+_Avoid_: Approach, solution, plan
+
 **Seam**:
 A place where behaviour is observable without reaching inside the code. Tests
 attach there.
-_Avoid_: Boundary, hook
+_Avoid_: Boundary (for a seam), hook
 
 **Deep module**:
 A module with a narrow interface over rich behaviour.

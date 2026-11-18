@@ -1,6 +1,8 @@
 # Plan: the development cycle
 
-Status: draft, not started.
+Status: draft, not started. The stage table and build order are superseded by
+[skill-architecture.md](skill-architecture.md); the goal, sizing rules, and
+project-pattern lookup here still hold.
 
 ## Goal
 
