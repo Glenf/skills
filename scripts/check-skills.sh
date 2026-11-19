@@ -30,16 +30,36 @@ frontmatter_name() {
 }
 
 check_name_matches_dir() {
-  local file="$1" dir name
-  dir="$(basename "$(dirname "$file")")"
+  local dir="$1" file="skills/$1/SKILL.md" name
   name="$(frontmatter_name "$REPO/$file")"
   [ "$name" = "$dir" ] ||
     error "$dir" "name: is '${name:-missing}' in $file; it must match the directory"
 }
 
+check_root_entries() {
+  local dir="$1" entry
+  while IFS= read -r entry; do
+    case "$entry" in
+      SKILL.md|references|scripts|assets|agents) ;;
+      *) error "$dir" "skills/$dir/$entry is not allowed at the skill root; move it into references/, scripts/, assets/, or agents/" ;;
+    esac
+  done < <(git -C "$REPO" ls-files "skills/$dir/" | sed "s#^skills/$dir/##; s#/.*##" | sort -u)
+}
+
+# Installs land elsewhere, so skill text must not point at absolute paths.
+check_absolute_paths() {
+  local dir="$1" hit
+  while IFS= read -r hit; do
+    error "$dir" "absolute path at $hit; use a relative path"
+  done < <(git -C "$REPO" grep -n -E '/Users/|~/|\]\(/' -- "skills/$dir/*.md" | cut -d: -f1,2)
+}
+
 # Tracked files only, so untracked clutter never fails the check.
 while IFS= read -r file; do
-  check_name_matches_dir "$file"
+  dir="$(basename "$(dirname "$file")")"
+  check_name_matches_dir "$dir"
+  check_root_entries "$dir"
+  check_absolute_paths "$dir"
 done < <(git -C "$REPO" ls-files ':(glob)skills/*/SKILL.md')
 
 [ "$errors" -eq 0 ] || exit 1

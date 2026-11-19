@@ -54,6 +54,30 @@ expect "quoted name passes" 0 "" "$d"
 d="$(clone untracked)"; mkdir -p "$d/skills/stray"; printf -- '---\nname: other\n---\n' > "$d/skills/stray/SKILL.md"
 expect "untracked skill ignored" 0 "" "$d"
 
+# Stray file at a skill's root.
+d="$(clone stray-file)"; echo x > "$d/skills/wait-what/notes.md"; git -C "$d" add skills/wait-what/notes.md
+expect "stray root file" 1 '^ERROR wait-what: .*skills/wait-what/notes.md' "$d"
+
+# Stray directory at a skill's root.
+d="$(clone stray-dir)"; mkdir -p "$d/skills/wait-what/examples"; echo x > "$d/skills/wait-what/examples/a.md"; git -C "$d" add skills/wait-what/examples
+expect "stray root dir" 1 '^ERROR wait-what: .*skills/wait-what/examples' "$d"
+
+# Allowed directory at a skill's root.
+d="$(clone allowed-dir)"; mkdir -p "$d/skills/wait-what/references"; echo x > "$d/skills/wait-what/references/a.md"; git -C "$d" add skills/wait-what/references
+expect "references/ allowed" 0 "" "$d"
+
+# Untracked stray file: ignored.
+d="$(clone untracked-stray)"; echo x > "$d/skills/wait-what/notes.md"
+expect "untracked stray ignored" 0 "" "$d"
+
+# Absolute paths in skill text, one form per clone.
+d="$(clone abs-users)"; echo 'See /Users/someone/x.md' >> "$d/skills/wait-what/SKILL.md"
+expect "absolute /Users/ path" 1 '^ERROR wait-what: .*skills/wait-what/SKILL.md:[0-9]+' "$d"
+d="$(clone abs-home)"; echo 'See ~/.claude/skills' >> "$d/skills/wait-what/SKILL.md"
+expect "absolute ~/ path" 1 '^ERROR wait-what: .*skills/wait-what/SKILL.md:[0-9]+' "$d"
+d="$(clone abs-link)"; echo 'See [x](/docs/x.md)' >> "$d/skills/wait-what/SKILL.md"
+expect "absolute link" 1 '^ERROR wait-what: .*skills/wait-what/SKILL.md:[0-9]+' "$d"
+
 # Help and bad flag.
 bash "$SCRIPT" --help | grep -q 'check-skills.sh' && echo "ok   --help" || { echo "FAIL --help"; fails=$((fails+1)); }
 bash "$SCRIPT" --bogus >/dev/null 2>&1; [ $? -eq 2 ] && echo "ok   bad flag exits 2" || { echo "FAIL bad flag"; fails=$((fails+1)); }
