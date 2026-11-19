@@ -60,3 +60,8 @@ Optional, when they earn their place: `argument-hint`, `user-invocable`,
    write it. `scripts/list-skills.sh --md` prints a starting point.
 3. Run `scripts/link-skills.sh` to symlink it into `~/.claude/skills/` and
    `~/.agents/skills/`, so edits here are live in both at once.
+
+`scripts/check-skills.sh` checks the mechanical rules in this file: errors
+block, warnings (context size, description length, installed-skill clashes)
+never do. A tracked pre-commit hook runs it; enable it once per clone with
+`git config core.hooksPath .githooks`.

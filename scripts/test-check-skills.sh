@@ -121,6 +121,25 @@ expect "long description warns" 0 '^WARN wait-what: .*description' "$d"
 d="$(clone clash)"; fake="$WORK/home"; mkdir -p "$fake/.claude/skills/wait-what"
 HOME="$fake" expect "installed clash warns" 0 '^WARN wait-what: .*clash' "$d"
 
+# Pre-commit hook, enabled in a clone: refuses errors, passes warnings.
+hook_clone() {
+  local d; d="$(clone "$1")"; mkdir -p "$d/.githooks"
+  cp "$REPO/.githooks/pre-commit" "$d/.githooks/pre-commit" 2>/dev/null || true
+  git -C "$d" config core.hooksPath .githooks; echo "$d"
+}
+try_commit() { git -C "$1" -c user.name=test -c user.email=test@example.invalid commit -q -m test 2>&1; }
+
+d="$(hook_clone hook-error)"; chmod +x "$d/README.md"; git -C "$d" add README.md
+if out="$(try_commit "$d")"; then
+  echo "FAIL hook refuses an error: commit went through"; fails=$((fails+1))
+elif grep -q '^ERROR repo: .*README.md' <<<"$out"; then echo "ok   hook refuses an error"
+else echo "FAIL hook refuses an error: no ERROR line"; echo "$out" | sed 's/^/    /'; fails=$((fails+1)); fi
+
+d="$(hook_clone hook-warn)"; words="$(printf 'word %.0s' $(seq 90))"
+sed -i '' "s/^description: .*/description: $words/" "$d/skills/wait-what/SKILL.md"; git -C "$d" add skills/wait-what/SKILL.md
+if out="$(try_commit "$d")" && grep -q '^WARN wait-what: .*description' <<<"$out"; then echo "ok   hook passes warnings"
+else echo "FAIL hook passes warnings"; echo "$out" | sed 's/^/    /'; fails=$((fails+1)); fi
+
 # Help and bad flag.
 bash "$SCRIPT" --help | grep -q 'check-skills.sh' && echo "ok   --help" || { echo "FAIL --help"; fails=$((fails+1)); }
 bash "$SCRIPT" --bogus >/dev/null 2>&1; [ $? -eq 2 ] && echo "ok   bad flag exits 2" || { echo "FAIL bad flag"; fails=$((fails+1)); }
