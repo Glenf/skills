@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Check the skills in this repo against the mechanical rules in AGENTS.md.
 #
-#   scripts/check-skills.sh             check every tracked skill
+#   scripts/check-skills.sh             check what is staged, as a commit would
 #
-# One line per finding: `ERROR <skill>: <what>`. Exits 1 on any error.
+# One line per finding: `ERROR` or `WARN <skill>: <what>`. Exits 1 on any error.
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -17,6 +17,9 @@ esac
 errors=0
 error() { echo "ERROR $1: $2"; errors=$((errors + 1)); }
 warn() { echo "WARN $1: $2"; }
+
+# The staged content of a file: the hook must judge the commit, not the disk.
+staged() { git -C "$REPO" show ":$1"; }
 
 # A frontmatter value on one line: inline, quoted, or a folded/literal block.
 frontmatter_field() {
@@ -40,7 +43,7 @@ frontmatter_field() {
 
 check_name_matches_dir() {
   local dir="$1" file="skills/$1/SKILL.md" name
-  name="$(frontmatter_field "$REPO/$file" name)"
+  name="$(staged "$file" | frontmatter_field - name)"
   [ "$name" = "$dir" ] ||
     error "$dir" "name: is '${name:-missing}' in $file; it must match the directory"
 }
@@ -52,7 +55,15 @@ check_root_entries() {
       SKILL.md|references|scripts|assets|agents) ;;
       *) error "$dir" "skills/$dir/$entry is not allowed at the skill root; move it into references/, scripts/, assets/, or agents/" ;;
     esac
-  done < <(git -C "$REPO" ls-files "skills/$dir/" | sed "s#^skills/$dir/##; s#/.*##" | sort -u)
+  done < <(root_entries "$dir")
+}
+
+# Plain string handling, never a sed program: directory names are untrusted.
+root_entries() {
+  local path
+  git -C "$REPO" ls-files -- ":(literal)skills/$1/" | while IFS= read -r path; do
+    path="${path#"skills/$1/"}"; echo "${path%%/*}"
+  done | sort -u
 }
 
 # Installs land elsewhere, so skill text must not point at absolute paths.
@@ -60,7 +71,7 @@ check_absolute_paths() {
   local dir="$1" hit
   while IFS= read -r hit; do
     error "$dir" "absolute path at $hit; use a relative path"
-  done < <(git -C "$REPO" grep -n -E '/Users/|~/|\]\(/' -- "skills/$dir/*.md" | cut -d: -f1,2)
+  done < <(git -C "$REPO" grep --cached -n -E '/Users/|~/|\]\(/' -- "skills/$dir/*.md" | cut -d: -f1,2)
 }
 
 # Tracked files only, so untracked clutter never fails the check.
@@ -70,10 +81,15 @@ tracked_skills() {
 
 # Every skill has one README row and every row has a skill; the row text is free.
 check_readme_rows() {
-  local rows skills name
-  rows="$(grep -oE '^\|[[:space:]]*\[[^]]+\]\(skills/[^/)]+\)' "$REPO/README.md" |
-    sed -E 's#.*\(skills/##; s#\)$##' | sort -u)"
+  local all rows skills name
+  all="$(staged README.md 2>/dev/null |
+    grep -oE '^\|[[:space:]]*\[[^]]+\]\(skills/[^/)]+\)' |
+    sed -E 's#.*\(skills/##; s#\)$##' | sort)" || true
+  rows="$(uniq <<<"$all")"
   skills="$(tracked_skills)"
+  while IFS= read -r name; do
+    error "$name" "has more than one row in README.md"
+  done < <(uniq -d <<<"$all" | sed '/^$/d')
   while IFS= read -r name; do
     error "$name" "no row in README.md"
   done < <(comm -13 <(echo "$rows") <(echo "$skills") | sed '/^$/d')
@@ -96,8 +112,8 @@ check_executables() {
 # skill is fine when justified.
 check_body_size() {
   local dir="$1" tokens
-  tokens=$(( $(awk 'NR == 1 && /^---/ { fm = 1; next } fm && /^---/ { fm = 0; body = 1; next } body' \
-    "$REPO/skills/$dir/SKILL.md" | wc -c) / 4 ))
+  tokens=$(( $(staged "skills/$dir/SKILL.md" |
+    awk 'NR == 1 && /^---/ { fm = 1; next } fm && /^---/ { fm = 0; body = 1; next } body' | wc -c) / 4 ))
   [ "$tokens" -le 2500 ] ||
     warn "$dir" "SKILL.md body is about $tokens tokens (guideline 2,500); move detail into references/ unless the length is justified"
 }
@@ -105,7 +121,7 @@ check_body_size() {
 # The description loads in every session, for every installed skill.
 check_description_length() {
   local dir="$1" words
-  words="$(frontmatter_field "$REPO/skills/$dir/SKILL.md" description | wc -w | tr -d ' ')"
+  words="$(staged "skills/$dir/SKILL.md" | frontmatter_field - description | wc -w | tr -d ' ')"
   [ "$words" -le 80 ] ||
     warn "$dir" "description is $words words (guideline 80); it loads in every session"
 }

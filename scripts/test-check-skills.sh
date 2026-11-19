@@ -39,15 +39,15 @@ d="$(clone renamed)"; git -C "$d" mv skills/wait-what skills/wait-whut
 expect "renamed dir" 1 '^ERROR wait-whut: .*skills/wait-whut/SKILL.md' "$d"
 
 # name: edited to differ from the directory.
-d="$(clone edited)"; sed -i '' 's/^name: wait-what$/name: wait-who/' "$d/skills/wait-what/SKILL.md"
+d="$(clone edited)"; sed -i '' 's/^name: wait-what$/name: wait-who/' "$d/skills/wait-what/SKILL.md"; git -C "$d" add -u
 expect "edited name" 1 '^ERROR wait-what: .*wait-who' "$d"
 
 # name: missing.
-d="$(clone missing)"; sed -i '' '/^name: wait-what$/d' "$d/skills/wait-what/SKILL.md"
+d="$(clone missing)"; sed -i '' '/^name: wait-what$/d' "$d/skills/wait-what/SKILL.md"; git -C "$d" add -u
 expect "missing name" 1 '^ERROR wait-what: ' "$d"
 
 # Quoted name: still matches.
-d="$(clone quoted)"; sed -i '' 's/^name: wait-what$/name: "wait-what"/' "$d/skills/wait-what/SKILL.md"
+d="$(clone quoted)"; sed -i '' 's/^name: wait-what$/name: "wait-what"/' "$d/skills/wait-what/SKILL.md"; git -C "$d" add -u
 expect "quoted name passes" 0 "" "$d"
 
 # Untracked skill with a wrong name: ignored, because only tracked files count.
@@ -71,19 +71,19 @@ d="$(clone untracked-stray)"; echo x > "$d/skills/wait-what/notes.md"
 expect "untracked stray ignored" 0 "" "$d"
 
 # Absolute paths in skill text, one form per clone.
-d="$(clone abs-users)"; echo 'See /Users/someone/x.md' >> "$d/skills/wait-what/SKILL.md"
+d="$(clone abs-users)"; echo 'See /Users/someone/x.md' >> "$d/skills/wait-what/SKILL.md"; git -C "$d" add -u
 expect "absolute /Users/ path" 1 '^ERROR wait-what: .*skills/wait-what/SKILL.md:[0-9]+' "$d"
-d="$(clone abs-home)"; echo 'See ~/.claude/skills' >> "$d/skills/wait-what/SKILL.md"
+d="$(clone abs-home)"; echo 'See ~/.claude/skills' >> "$d/skills/wait-what/SKILL.md"; git -C "$d" add -u
 expect "absolute ~/ path" 1 '^ERROR wait-what: .*skills/wait-what/SKILL.md:[0-9]+' "$d"
-d="$(clone abs-link)"; echo 'See [x](/docs/x.md)' >> "$d/skills/wait-what/SKILL.md"
+d="$(clone abs-link)"; echo 'See [x](/docs/x.md)' >> "$d/skills/wait-what/SKILL.md"; git -C "$d" add -u
 expect "absolute link" 1 '^ERROR wait-what: .*skills/wait-what/SKILL.md:[0-9]+' "$d"
 
 # README row missing for a skill.
-d="$(clone no-row)"; sed -i '' '/](skills\/wait-what)/d' "$d/README.md"
+d="$(clone no-row)"; sed -i '' '/](skills\/wait-what)/d' "$d/README.md"; git -C "$d" add -u
 expect "missing README row" 1 '^ERROR wait-what: .*README' "$d"
 
 # README row for a skill that does not exist.
-d="$(clone orphan-row)"; echo '| [ghost](skills/ghost) | Nothing. |' >> "$d/README.md"
+d="$(clone orphan-row)"; echo '| [ghost](skills/ghost) | Nothing. |' >> "$d/README.md"; git -C "$d" add -u
 expect "orphan README row" 1 '^ERROR ghost: .*README' "$d"
 
 # Executable file outside scripts/ or .githooks/.
@@ -109,12 +109,12 @@ else
 fi
 
 # Long body: warns, exit unchanged.
-d="$(clone big-body)"; head -c 12000 /dev/zero | tr '\0' 'x' >> "$d/skills/wait-what/SKILL.md"
+d="$(clone big-body)"; head -c 12000 /dev/zero | tr '\0' 'x' >> "$d/skills/wait-what/SKILL.md"; git -C "$d" add -u
 expect "large body warns" 0 '^WARN wait-what: .*token' "$d"
 
 # Long description: warns, exit unchanged.
 d="$(clone long-desc)"; words="$(printf 'word %.0s' $(seq 90))"
-sed -i '' "s/^description: .*/description: $words/" "$d/skills/wait-what/SKILL.md"
+sed -i '' "s/^description: .*/description: $words/" "$d/skills/wait-what/SKILL.md"; git -C "$d" add -u
 expect "long description warns" 0 '^WARN wait-what: .*description' "$d"
 
 # Clash with an installed skill in a fake HOME: warns, exit unchanged.
@@ -139,6 +139,28 @@ d="$(hook_clone hook-warn)"; words="$(printf 'word %.0s' $(seq 90))"
 sed -i '' "s/^description: .*/description: $words/" "$d/skills/wait-what/SKILL.md"; git -C "$d" add skills/wait-what/SKILL.md
 if out="$(try_commit "$d")" && grep -q '^WARN wait-what: .*description' <<<"$out"; then echo "ok   hook passes warnings"
 else echo "FAIL hook passes warnings"; echo "$out" | sed 's/^/    /'; fails=$((fails+1)); fi
+
+# The check reads what is staged, not the working tree.
+d="$(clone staged-bad)"; f="$d/skills/wait-what/SKILL.md"
+sed -i '' 's/^name: wait-what$/name: bad/' "$f"; git -C "$d" add -u; git -C "$d" show HEAD:skills/wait-what/SKILL.md > "$f"
+expect "staged breach fails though disk is clean" 1 '^ERROR wait-what: .*bad' "$d"
+d="$(clone unstaged-bad)"; sed -i '' 's/^name: wait-what$/name: bad/' "$d/skills/wait-what/SKILL.md"
+expect "unstaged breach ignored" 0 "" "$d"
+
+# README with no table rows: every skill reported, no silent stop.
+d="$(clone no-rows)"; sed -i '' '/^| \[/d' "$d/README.md"; git -C "$d" add -u
+expect "README without rows reports skills" 1 '^ERROR wait-what: no row in README.md' "$d"
+
+# Two README rows for one skill.
+d="$(clone dup-row)"; echo '| [wait-what](skills/wait-what) | Again. |' >> "$d/README.md"; git -C "$d" add -u
+expect "duplicate README row" 1 '^ERROR wait-what: .*more than one row' "$d"
+
+# A directory name with sed commands in it runs nothing.
+d="$(clone sed-inject)"; evil="$d/skills/x##;w PWN"; mkdir -p "$evil" "$d/PWN/##; s#"
+printf -- '---\nname: x##;w PWN\n---\n' > "$evil/SKILL.md"; git -C "$d" add "skills/x##;w PWN/SKILL.md"
+(cd "$d" && bash scripts/check-skills.sh >/dev/null 2>&1)
+if [ -z "$(find "$d/PWN" -type f)" ]; then echo "ok   directory name cannot inject into sed"
+else echo "FAIL directory name injected a sed command: $(find "$d/PWN" -type f)"; fails=$((fails+1)); fi
 
 # Help and bad flag.
 bash "$SCRIPT" --help | grep -q 'check-skills.sh' && echo "ok   --help" || { echo "FAIL --help"; fails=$((fails+1)); }
