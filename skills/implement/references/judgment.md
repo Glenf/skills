@@ -106,5 +106,6 @@ RFCs, findings) are superseded, never rewritten.
   somebody.
 - **Yaron Minsky**: make illegal states unrepresentable.
 - **Unix kernel culture**: the code is the specification.
-- **The ub-mode school**: attack the premise, build the lever, reproduce before
-  you fix, idempotent and single-writer by default, do not silence the compiler.
+- **poteto's pstack, and Uncle Bob's ub-mode, a reduced form of it**: attack
+  the premise, build the lever, reproduce before you fix, idempotent and
+  single-writer by default, do not silence the compiler.

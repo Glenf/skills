@@ -48,11 +48,11 @@ duplication is removed and it becomes the map.
 | `bug-diagnose` | Reproduce, trace to the cause, name the fix boundary and the acceptance check. | Fix the bug. | new | model |
 | `why` | Answer why something is the way it is from the record: commits, PR/MR discussions, issues, ADRs, release notes. Cite authors, mark inferences, name what the record does not answer. | Infer intent from the code, or propose a change. | new, off-path | user |
 | `wet-or-dry` | Simplify: duplication and abstraction verdicts. | Bug hunts, style, whole-repo audits. | exist | model |
-| `code-review` | Three independent lenses; findings with severity, confidence, evidence. | Apply fixes. | exist | model |
+| `code-review` | Three independent lenses, plus a security lens when the diff touches a trust boundary; findings with severity, confidence, evidence. | Apply fixes. | exist; add security lens | model |
 | `prove-and-hand-over` | Prove the outcome, run the review, operate, report, write the PR/MR body. | Implement. | new | model |
 | `prototype` | Settle an empirical fork with throwaway code. | Production code. | new, off-path | user |
-| `hillclimb` | Sustained improvement of one metric against a target: baseline, frozen harness, one change per measurement, keep or revert, decision log. | A one-off fix, or stacking untested changes. | new, off-path | user |
-| `retro` | Turn lessons into edits to skills, `AGENTS.md`, ADRs, or the glossary. | Fix the change. | new | user |
+| `hillclimb` | Sustained improvement of one metric against a target: baseline, frozen bench, one change per measurement, keep or revert, decision log. | A one-off fix, or stacking untested changes. | new, off-path | user |
+| `retro` | Turn each lesson into its cheapest enforcing home: a test, lint rule, or type first; then a skill or `AGENTS.md`; then an ADR, glossary entry, or doc. Prune stale lessons. Review skill text when the lesson is about a skill. | Fix the change. | new | user |
 
 ## Flow
 
@@ -94,7 +94,7 @@ start of a change and whenever new work arrives.
 | Review finding | Fix now, defer, or declare. |
 | Retro lesson | Which home: skill, `AGENTS.md`, ADR, glossary. |
 | Bug report | Reproduce first? Severity? Route to `bug-diagnose`. |
-| Performance goal | Is there a metric, target, baseline, and harness? Route to `hillclimb`. |
+| Performance goal | Is there a metric, target, baseline, and bench? Route to `hillclimb`. |
 | PR comment | Change request, question, or noise? |
 
 It answers:
@@ -154,7 +154,9 @@ Generated work must be triage-ready:
    - research notes as an appendix.
 
 The spec becomes `Status: approved` only when the human approves it; tasks are
-cut only from an approved spec.
+cut only from an approved spec. The shape confirmation in step 5 is the
+decision gate. Spec approval is a light check that the record matches it, not
+a second full stop.
 
 ## Spec and tasks
 
@@ -248,9 +250,9 @@ the diff is reviewed and the measurement is not.
 2. Fix one metric, the direction that counts as better, and a stop predicate.
    Pair a target with a floor on attempts so a lucky early win cannot end the
    run. Use the user's numbers; otherwise agree them.
-3. Build the measurement harness and prove it is sensitive. Run contrasting
+3. Build the bench and prove it is sensitive. Run contrasting
    workloads: the target case must reproduce the symptom, and easier cases
-   must separate as expected. Freeze the harness. It prints the metric, its
+   must separate as expected. Freeze the bench. It prints the metric, its
    error count, and the work done; it samples enough to clear the noise (the
    median of N runs, not one run). Record the baseline and a green regression
    gate before any change.
@@ -308,11 +310,12 @@ the next starts.
    finding.
 5. `bug-diagnose` — reproduces a real bug and names its cause.
 6. `prove-and-hand-over` — proves a real change and produces the report.
-7. `why` — reads the record for a real decision and names its gaps.
-8. `architecture` — used on a structural question.
-9. `prototype` — settles one empirical fork.
-10. `hillclimb` — runs a real metric campaign against a target.
-11. `retro` — routes lessons from a finished change.
+7. `retro` — turns lessons from that finished change into enforcement.
+   Early, so every later step compounds.
+8. `why` — reads the record for a real decision and names its gaps.
+9. `architecture` — used on a structural question.
+10. `prototype` — settles one empirical fork.
+11. `hillclimb` — runs a real metric campaign against a target.
 12. Rewrite `glen-mode` as the map; link the stages; delete the duplicated
     content.
 
@@ -351,4 +354,8 @@ is deliberate and temporary.
 - Does `design` grow its own research reference, or call a future research
   skill? Default: it carries the method for now.
 - The `architecture` versus `design` boundary needs one worked example before
-  step 7.
+  step 9.
+- No skill writes or checks skill text, in the style of `writing-for-agents`.
+  The `AGENTS.md` rules have no check, and cross-skill drift (terms, hand-offs,
+  examples) is found only by a manual review. Shape not decided: write, check,
+  or both; which rules go to a script.

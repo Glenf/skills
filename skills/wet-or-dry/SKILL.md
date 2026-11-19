@@ -95,7 +95,7 @@ reader needs to see that a copy was judged, not missed.
 End with a one-line balance: where the change sits — too WET, too DRY, or
 neither — and the evidence for it.
 
-Report only, unless the user said `fix` or the caller is glen-mode.
+Report only, unless the user said `fix` or a calling stage asks for fixes.
 
 ## 6. Apply (only when asked)
 
