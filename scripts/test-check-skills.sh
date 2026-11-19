@@ -78,6 +78,26 @@ expect "absolute ~/ path" 1 '^ERROR wait-what: .*skills/wait-what/SKILL.md:[0-9]
 d="$(clone abs-link)"; echo 'See [x](/docs/x.md)' >> "$d/skills/wait-what/SKILL.md"
 expect "absolute link" 1 '^ERROR wait-what: .*skills/wait-what/SKILL.md:[0-9]+' "$d"
 
+# README row missing for a skill.
+d="$(clone no-row)"; sed -i '' '/](skills\/wait-what)/d' "$d/README.md"
+expect "missing README row" 1 '^ERROR wait-what: .*README' "$d"
+
+# README row for a skill that does not exist.
+d="$(clone orphan-row)"; echo '| [ghost](skills/ghost) | Nothing. |' >> "$d/README.md"
+expect "orphan README row" 1 '^ERROR ghost: .*README' "$d"
+
+# Executable file outside scripts/ or .githooks/.
+d="$(clone exec-md)"; chmod +x "$d/skills/wait-what/SKILL.md"; git -C "$d" add skills/wait-what/SKILL.md
+expect "executable SKILL.md" 1 '^ERROR wait-what: .*skills/wait-what/SKILL.md' "$d"
+d="$(clone exec-root)"; chmod +x "$d/README.md"; git -C "$d" add README.md
+expect "executable README.md" 1 '^ERROR repo: .*README.md' "$d"
+
+# Executables where they belong.
+d="$(clone exec-ok)"; mkdir -p "$d/skills/wait-what/scripts" "$d/.githooks"
+printf '#!/bin/sh\n' > "$d/skills/wait-what/scripts/run.sh"; printf '#!/bin/sh\n' > "$d/.githooks/pre-commit"
+chmod +x "$d/skills/wait-what/scripts/run.sh" "$d/.githooks/pre-commit"; git -C "$d" add skills/wait-what/scripts .githooks
+expect "executables in scripts/ and .githooks/" 0 "" "$d"
+
 # Help and bad flag.
 bash "$SCRIPT" --help | grep -q 'check-skills.sh' && echo "ok   --help" || { echo "FAIL --help"; fails=$((fails+1)); }
 bash "$SCRIPT" --bogus >/dev/null 2>&1; [ $? -eq 2 ] && echo "ok   bad flag exits 2" || { echo "FAIL bad flag"; fails=$((fails+1)); }

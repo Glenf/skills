@@ -51,7 +51,8 @@ Optional, when they earn their place: `argument-hint`, `user-invocable`,
 ## Adding a skill
 
 1. `mkdir -p skills/<name>` and write `SKILL.md`.
-2. Add a row to the table in `README.md` — `scripts/list-skills.sh --md`
-   prints it.
+2. Add one row for the skill to the table in `README.md`. Every skill needs
+   exactly one row; the row text is free — write it yourself or let an agent
+   write it. `scripts/list-skills.sh --md` prints a starting point.
 3. Run `scripts/link-skills.sh` to symlink it into `~/.claude/skills/` and
    `~/.agents/skills/`, so edits here are live in both at once.

@@ -55,11 +55,40 @@ check_absolute_paths() {
 }
 
 # Tracked files only, so untracked clutter never fails the check.
-while IFS= read -r file; do
-  dir="$(basename "$(dirname "$file")")"
+tracked_skills() {
+  git -C "$REPO" ls-files ':(glob)skills/*/SKILL.md' | cut -d/ -f2 | sort -u
+}
+
+# Every skill has one README row and every row has a skill; the row text is free.
+check_readme_rows() {
+  local rows skills name
+  rows="$(grep -oE '^\|[[:space:]]*\[[^]]+\]\(skills/[^/)]+\)' "$REPO/README.md" |
+    sed -E 's#.*\(skills/##; s#\)$##' | sort -u)"
+  skills="$(tracked_skills)"
+  while IFS= read -r name; do
+    error "$name" "no row in README.md"
+  done < <(comm -13 <(echo "$rows") <(echo "$skills") | sed '/^$/d')
+  while IFS= read -r name; do
+    error "$name" "README.md has a row, but skills/$name/SKILL.md is not tracked"
+  done < <(comm -23 <(echo "$rows") <(echo "$skills") | sed '/^$/d')
+}
+
+# A mode change outside scripts is almost always an accident.
+check_executables() {
+  local path subject
+  while IFS= read -r path; do
+    case "$path" in scripts/*|*/scripts/*|.githooks/*) continue ;; esac
+    case "$path" in skills/*/*) subject="$(cut -d/ -f2 <<<"$path")" ;; *) subject=repo ;; esac
+    error "$subject" "$path is executable; only files under scripts/ or .githooks/ may be"
+  done < <(git -C "$REPO" ls-files -s | awk '$1 == "100755" { sub(/^[^\t]*\t/, ""); print }')
+}
+
+while IFS= read -r dir; do
   check_name_matches_dir "$dir"
   check_root_entries "$dir"
   check_absolute_paths "$dir"
-done < <(git -C "$REPO" ls-files ':(glob)skills/*/SKILL.md')
+done < <(tracked_skills)
+check_readme_rows
+check_executables
 
 [ "$errors" -eq 0 ] || exit 1
