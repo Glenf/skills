@@ -52,7 +52,8 @@ These change the first stage, not the kind.
 | `why` | Intent lives only in the record | Runs before `design`, `bug-diagnose`, or `architecture` |
 | `show-me` | The answer is a view: a call tree, a flow, a diff | Answers the question instead of prose |
 
-`wet-or-dry` is called by `implement`. Triage never routes to it directly.
+`wet-or-dry` is called by `implement`, and once per change by
+`prove-and-hand-over`. Triage never routes to it directly.
 
 ## Source rulings
 

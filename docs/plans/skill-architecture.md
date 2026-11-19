@@ -49,7 +49,7 @@ duplication is removed and it becomes the map.
 | `why` | Answer why something is the way it is from the record: commits, PR/MR discussions, issues, ADRs, release notes. Cite authors, mark inferences, name what the record does not answer. | Infer intent from the code, or propose a change. | new, off-path | user |
 | `wet-or-dry` | Simplify: duplication and abstraction verdicts. | Bug hunts, style, whole-repo audits. | exist | model |
 | `code-review` | Three independent lenses, plus a security lens when the diff touches a trust boundary; findings with severity, confidence, evidence. | Apply fixes. | exist; add security lens | model |
-| `prove-and-hand-over` | Prove the outcome, run the review, operate, report, write the PR/MR body. | Implement. | new | model |
+| `prove-and-hand-over` | Prove the outcome, run a change-level `wet-or-dry` pass and the review, operate, report, write the PR/MR body. | Implement. | new | model |
 | `prototype` | Settle an empirical fork with throwaway code. | Production code. | new, off-path | user |
 | `hillclimb` | Sustained improvement of one metric against a target: baseline, frozen bench, one change per measurement, keep or revert, decision log. | A one-off fix, or stacking untested changes. | new, off-path | user |
 | `retro` | Turn each lesson into its cheapest enforcing home: a test, lint rule, or type first; then a skill or `AGENTS.md`; then an ADR, glossary entry, or doc. Prune stale lessons. Review skill text when the lesson is about a skill. | Fix the change. | new | user |
@@ -75,7 +75,7 @@ any work item
 - `hillclimb` runs when the goal is a measurable target, not a one-off fix.
 - `why` runs when design, diagnosis, or architecture needs intent the
   code cannot show.
-- `wet-or-dry` is called by `implement`.
+- `wet-or-dry` is called by `implement`, and once per change by `prove-and-hand-over`.
 - `code-review` is called by `prove-and-hand-over`, and also runs alone.
 
 The arrows show order, not automatic invocation. Each stage reports and stops.
@@ -281,6 +281,8 @@ accepted fix on one line, the decision log path, and the best idea left.
 
 - Prove each acceptance criterion with a direct check on the real surface,
   not only a passing test.
+- Run `wet-or-dry` once across the whole change, before the review: per-task
+  runs cannot see copies spread across tasks.
 - Run `code-review`; every P0/P1 finding is fixed or declared.
 - Keep the log, commit in small ordered commits, reclaim the worktree.
 - Produce the handover report from `handover.md`.
