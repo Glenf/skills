@@ -101,7 +101,8 @@ rejected with the risk recorded; a retro lesson goes to `retro` with its propose
 home; a PR comment is a change request, a question, or noise. The goal modifiers
 (`find-the-core`, `north-star`, `prototype`, `why`) and the full source checks
 are in [`routing.md`](references/routing.md). Naming the path ends this stage; do
-not start it. If a named stage is not installed, say it is planned and stop.
+not start it. If a named stage is not installed, mark it `(planned)` in the
+path and stop.
 
 ## 8. Choose the verdict
 
@@ -132,17 +133,25 @@ priority stays with the user or the tracker.
 ## 10. Report and stop
 
 ```
-Verdict: <do now | defer | reject | duplicate | needs framing/info>
-Item: <one line>
-Source: <user request | tracker issue | spec task | review finding | retro lesson | bug report | metric target | PR comment>
-Kind: <question | mechanical | bug | feature | refactor | metric | structural>
-Size: <one function | one module | cross-module | repo-wide | unknown>
-Blast radius: <callers, public surface, data, formats, tests>
-Validity: <valid | done | duplicate of X | superseded by Y>
-Blocked by / missing: <blocker, wait, or gap; owner>
-Path: <stage> → <stage> (skipped: ...)
-Next action: <one action>
+DO NOW → <next action>
+  | DEFER until <trigger> (owner: <owner>)
+  | REJECT: <evidence>
+  | DUPLICATE of <canonical item>
+  | NEEDS FRAMING/INFO: <one question> (owner: <owner>)
+<the item, in one line>
+<question | mechanical | bug | feature | refactor | metric | structural> · <size class> · <source>
+
+Path      <stage> → <stage> → ...
+
+Valid     <evidence: valid, done, duplicate of X, superseded by Y>
+Blocked   <blocker or wait; owner>
+Blast     <callers, public surface, data, formats, tests>
 ```
+
+The decision comes first and names what its verdict must name. Evidence lists
+only the fields that support the verdict, and never a field whose value is none.
+Name a next stage as a skill, "run the `design` skill", not as a slash command:
+harnesses invoke skills differently.
 
 Then stop: no skill invoked, no task created or edited, no code, no tracker
 edit. The user or `glen-mode` starts the next stage.
@@ -155,8 +164,8 @@ edit. The user or `glen-mode` starts the next stage.
 - [ ] Every blocker or wait is named with an owner; a blocked task is deferred.
 - [ ] A size class and an evidence-based blast radius are given, with no
       estimate.
-- [ ] The path names its stages and the skipped ones.
-- [ ] One verdict and one next action are given.
+- [ ] The path names its stages.
+- [ ] One verdict leads the report, with what that verdict must name.
 - [ ] Nothing was started, written, or invoked.
 
 ## Boundaries

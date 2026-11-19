@@ -132,27 +132,20 @@ Every verdict names what settled it:
 ## Worked records
 
 ```
-Verdict: defer
-Item: Add a retry to the webhook sender
-Source: tracker issue HOOK-31
-Kind: feature
-Size: one module
-Blast radius: the webhook sender, its queue consumer, delivery tests
-Validity: valid; no duplicate found by "retry" or "webhook delivery"
-Blocked by / missing: needs a decision on duplicate delivery; owner is the user
-Path: design → spec-and-tasks → implement → prove-and-hand-over
-Next action: leave blocked until the duplicate-delivery decision is made
+DEFER until the duplicate-delivery decision is made (owner: user)
+Add a retry to the webhook sender
+feature · one module · tracker issue HOOK-31
+
+Path      design → spec-and-tasks → implement → prove-and-hand-over
+
+Valid     no duplicate found by "retry" or "webhook delivery"
+Blast     the webhook sender, its queue consumer, delivery tests
 ```
 
 ```
-Verdict: reject
-Item: Move every test to the new assertion library
-Source: review finding
-Kind: refactor
-Size: repo-wide
-Blast radius: every test file; no product surface
-Validity: out of scope for the reviewed change, and not required by any spec
-Blocked by / missing: none
-Path: none (skipped: design, spec-and-tasks, implement)
-Next action: record as found-not-fixed; no change in this review
+REJECT: out of scope for the reviewed change, and not required by any spec; record as found-not-fixed
+Move every test to the new assertion library
+refactor · repo-wide · review finding
+
+Blast     every test file; no product surface
 ```

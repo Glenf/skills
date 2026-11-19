@@ -126,53 +126,45 @@ blast radius at all.
 ## Examples
 
 ```
-Verdict: do now
-Item: Rejected imports show no reason code in the console
-Source: tracker issue
-Kind: bug
-Size: one module
-Blast radius: the import endpoint, the console view, the rejection tests
-Validity: valid; no duplicate found by "reason code" or "rejected import"
-Blocked by / missing: none
-Path: bug-diagnose → implement → prove-and-hand-over (skipped: design, spec-and-tasks)
-Next action: run bug-diagnose on the rejection path
+DO NOW → run bug-diagnose on the rejection path
+Rejected imports show no reason code in the console
+bug · one module · tracker issue
+
+Path      bug-diagnose → implement → prove-and-hand-over
+
+Valid     no duplicate found by "reason code" or "rejected import"
+Blast     the import endpoint, the console view, the rejection tests
 ```
 
 ```
-Verdict: defer
-Item: Rename the billing module to payments
-Source: spec task PAY-14
-Kind: refactor
-Size: cross-module
-Blast radius: every caller of the billing package, the public export, the docs
-Validity: valid
-Blocked by / missing: PAY-12 (move the invoice table) is open; owner is the tracker
-Path: implement → prove-and-hand-over (already sliced; skipped: design, spec-and-tasks)
-Next action: leave PAY-14 blocked; the trigger is PAY-12 closing
+DEFER until PAY-12 closes (owner: tracker)
+Rename the billing module to payments
+refactor · cross-module · spec task PAY-14
+
+Path      implement → prove-and-hand-over (already sliced)
+
+Blocked   PAY-12 moves the invoice table this rename needs
+Blast     every caller of the billing package, the public export, the docs
 ```
 
 ```
-Verdict: needs framing/info
-Item: Make the dashboard faster
-Source: user request
-Kind: metric
-Size: unknown
-Blast radius: unknown; the dashboard and whatever backs its numbers
-Validity: valid as a complaint, not yet as work
-Blocked by / missing: no metric or target; owner is the requester
-Path: hillclimb → prove-and-hand-over, once a metric and target exist
-Next action: ask which number on the dashboard is too slow, and what it should be
+NEEDS FRAMING/INFO: which number on the dashboard is too slow, and what should it be? (owner: requester)
+Make the dashboard faster
+metric · unknown · user request
+
+Path      hillclimb → prove-and-hand-over, once a metric and target exist
+
+Valid     as a complaint, not yet as work: no metric or target
+Blast     unknown; the dashboard and whatever backs its numbers
 ```
 
 ```
-Verdict: duplicate
-Item: Export fails on rows with a comma in the name
-Source: PR comment
-Kind: bug
-Size: one function
-Blast radius: the CSV writer and its tests
-Validity: duplicate of BUG-88, which names the same quoting bug with a failing fixture
-Blocked by / missing: none
-Path: bug-diagnose → implement → prove-and-hand-over
-Next action: recommend closing this comment against BUG-88
+DUPLICATE of BUG-88
+Export fails on rows with a comma in the name
+bug · one function · PR comment
+
+Path      bug-diagnose → implement → prove-and-hand-over
+
+Valid     BUG-88 names the same quoting bug with a failing fixture; recommend closing this comment
+Blast     the CSV writer and its tests
 ```
