@@ -207,8 +207,8 @@ The commit, branch, or tag a review compares the change against.
 _Avoid_: Base, target
 
 **Lens**:
-One independent view of a review — correctness, standards, or spec — run as
-its own sub-agent.
+One independent view of a review — correctness, standards, spec, or security
+— run as its own sub-agent.
 _Avoid_: Reviewer, perspective, pass
 
 **Finding**:

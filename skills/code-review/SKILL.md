@@ -2,8 +2,9 @@
 name: code-review
 description: >
   Review a code change on three independent lenses — correctness, standards,
-  spec — run as parallel sub-agents, reporting findings with severity,
-  confidence, and file:line evidence. Use before shipping a branch or PR, or
+  spec — plus security when the diff touches a trust boundary, run as parallel
+  sub-agents, reporting findings with severity, confidence, and file:line
+  evidence. Use before shipping a branch or PR, or
   when glen-mode asks for a review. Not for documents, bug hunts, or applying
   fixes.
 argument-hint: "[fixed-point] [spec path]"
@@ -50,14 +51,22 @@ changed area.
 Three lines from the commits and spec: what the change makes true, and what it
 deliberately leaves alone. It keeps reviewers from inventing requirements.
 
-### 5. Dispatch
+### 5. Check for a trust boundary
+
+The Security lens runs only when the diff touches a trust boundary: parsing or
+validating outside input, authentication or authorisation, secrets or
+credentials, network or file-system access driven by input, deserialisation,
+SQL, shell, HTML, or paths built from input, permissions, or crypto. Decide from
+the diff. Name the boundary with its file:line, or state that none was touched.
+
+### 6. Dispatch
 
 Issue the sub-agent calls together, foreground, each with fresh context:
-Correctness and Standards always, Spec only when step 2 found one. Each call
-gets its brief from [`references/lenses.md`](references/lenses.md) plus the
-inputs listed there.
+Correctness and Standards always, Spec only when step 2 found one, Security
+only when step 5 named a boundary. Each call gets its brief from
+[`references/lenses.md`](references/lenses.md) plus the inputs listed there.
 
-### 6. Validate and report
+### 7. Validate and report
 
 Follow [`references/report.md`](references/report.md): validate each lens's
 findings, then fill the template. Done when every returned finding is either in

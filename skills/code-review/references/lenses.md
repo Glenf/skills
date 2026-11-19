@@ -10,10 +10,14 @@ Paste one brief per sub-agent call, plus:
   [`report.md`](report.md)
 - the Finding line and Language sections of the `ste-report` skill
 - the spec path or contents (Spec lens only)
+- the trust boundary and its file:line from SKILL.md step 5 (Security lens
+  only)
+- whether the Security lens runs (Correctness lens only)
 
 Each lens stays in its own lane: Correctness asks _does it work?_, Standards
-_does it follow the repo?_, Spec _is it the right change?_. A defect that
-spans lanes is reported by each lens it belongs to.
+_does it follow the repo?_, Spec _is it the right change?_, Security _can
+outside input or a secret do harm here?_. A defect that spans lanes is
+reported by each lens it belongs to.
 
 ## Correctness
 
@@ -40,7 +44,7 @@ list which rows you checked:
 
 | Risk | Check when | Look for |
 |---|---|---|
-| Security | auth, untrusted input, secrets, network, files | broken authz, injection, traversal, SSRF, unsafe deserialization |
+| Security | auth, untrusted input, secrets, network, files — unless the Security lens runs | broken authz, injection, traversal, SSRF, unsafe deserialization |
 | Performance | hot path, query, loop, large input | unbounded work, N+1 queries, missing index, sync I/O |
 | Data/migration | schema, backfill, persisted state | nullable transition, rollback, dual-write, lost rows |
 | API contract | public signature, event, wire format | breaking shape, changed error code, silent semantic change |
@@ -100,3 +104,33 @@ Report:
 - **Scope creep** — behaviour the spec did not ask for.
 - **Wrong implementation** — a requirement that looks present but contradicts
   the spec.
+
+## Security
+
+> You are the security reviewer. The orchestrator names the trust boundary the
+> diff touches. Find exploitable defects at that boundary, in the diff and the
+> code it reaches; this is not a whole-repo audit. Correctness and conventions
+> belong to other lenses unless they open a hole. Under 400 words.
+
+A finding traces a path from source to sink: where outside input or a secret
+enters, and where it does harm, each with file:line. The location is the sink;
+the problem names the source and the steps between. No reachable path, no
+finding: no checklist output, no "consider adding validation".
+
+Hunt for:
+
+- **Injection** — input reaching SQL, a shell, HTML, or a template without
+  parameterising or escaping.
+- **Missing authz** — an action or read reachable without the check its
+  siblings make, or with the check after the effect.
+- **Secret exposure** — a credential in code, config, logs, errors, or a
+  response.
+- **Unvalidated input at a sink** — input reaching a file, network, redirect,
+  or allocation sink unchecked: SSRF, open redirect, unbounded size.
+- **Unsafe deserialisation** — untrusted bytes into a deserialiser that can
+  build arbitrary types or run code.
+- **Path traversal** — a path built from input that can leave its intended
+  root.
+- **Weakened TLS or crypto** — verification turned off, a weak algorithm, a
+  fixed or reused key or nonce, a non-cryptographic random source for a
+  secret.

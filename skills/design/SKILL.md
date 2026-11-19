@@ -132,13 +132,13 @@ spec.
 
 ## 7. Approve and stop
 
-Present the written spec. The shape is settled; this checks the record, not the
-decision. If the spec changes the shape, return to step 5 before approval.
+Present the spec and ask once whether it records the confirmed shape. This is a
+read, not a second review; do not re-open settled decisions. If the spec changes
+or adds to the shape, return to step 5.
 
-On approval, change the spec's status from `draft` to `approved`, and record
-the approver. Then stop: no tasks, no code, no tracker. The next stage is
-`spec-and-tasks`, which starts from the approved spec. If the spec fails in
-code it returns here, never sideways into implementation.
+On approval, set `Status: approved` and record the approver. Then stop: no
+tasks, no code, no tracker. The next stage is `spec-and-tasks`. If the spec
+fails in code it returns here, never sideways into implementation.
 
 ## Boundaries
 

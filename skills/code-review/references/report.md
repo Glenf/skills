@@ -66,6 +66,7 @@ lenses flagging one line is two findings; agreement promotes nothing.
 
 - **Commits:** <n>: <oneline list>
 - **Spec:** <path, or "skipped: none provided">
+- **Security:** <trust boundary and file:line, or "skipped: no trust boundary touched">
 - **Standards:** <paths, or "none documented; smell baseline only">
 - **Risk checks:** <selected>; not selected: <the rest>
 - **Dropped:** <findings dropped in validation, and why>
@@ -83,11 +84,16 @@ lenses flagging one line is two findings; agreement promotes nothing.
 
 <findings, or "Skipped: no spec provided.">
 
+### Security
+
+<findings, or "Skipped: no trust boundary touched.">
+
 ## Summary
 
 - **Correctness:** <n> findings; worst: <P0-P3> <one line>; blocking: <P0/P1, or "none">
 - **Standards:** <n> findings; worst: <P0-P3> <one line>; blocking: <P0/P1, or "none">
 - **Spec:** <n> findings; worst: <P0-P3> <one line>; blocking: <P0/P1, or "none"> — or "skipped (no spec)"
+- **Security:** <n> findings; worst: <P0-P3> <one line>; blocking: <P0/P1, or "none"> — or "skipped (no trust boundary)"
 ```
 
 P0/P1 findings should be actionable from the report alone, without opening the

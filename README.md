@@ -13,7 +13,7 @@ npx skills update                      # update everything installed
 
 | Skill | What it does |
 | ----- | ------------ |
-| [code-review](skills/code-review) | Review a code change on three independent lenses — correctness, standards, spec — run as parallel sub-agents, reporting findings with severity, confidence, and file:line evidence. |
+| [code-review](skills/code-review) | Review a code change on three independent lenses — correctness, standards, spec — plus security when the diff touches a trust boundary, run as parallel sub-agents, reporting findings with severity, confidence, and file:line evidence. |
 | [design](skills/design) | Settle the shape of one change before code: facts, open forks, two candidate shapes, decisions, acceptance criteria, and seams. |
 | [find-the-core](skills/find-the-core) | Drill into the core of a task before executing it, using Simon Sinek's Golden Circle (Why → How → What) fused with the journalist's 5 W's (Who / What / When / Where / Why). |
 | [glen-mode](skills/glen-mode) | Engineering discipline for a code change from first read to handover: make it work, make it right, follow the practice. |
