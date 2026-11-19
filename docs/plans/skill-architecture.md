@@ -284,7 +284,8 @@ accepted fix on one line, the decision log path, and the best idea left.
 - Run `wet-or-dry` once across the whole change, before the review: per-task
   runs cannot see copies spread across tasks.
 - Run `code-review`; every P0/P1 finding is fixed or declared.
-- Keep the log, commit in small ordered commits, reclaim the worktree.
+- Leave the working tree clean, or name what is left in the handover. Commits
+  and each task's log belong to `implement`.
 - Produce the handover report from `handover.md`.
 - Write the PR/MR body: why, what, how it was proved, what is not proved,
   and a `show-me` change outline.
@@ -310,8 +311,9 @@ the next starts.
 3. `implement` — duplicates the current beats and is used on a real task.
 4. `triage` — routes a request, a tracker issue, a spec task, and a review
    finding.
-5. `bug-diagnose` — reproduces a real bug and names its cause.
-6. `prove-and-hand-over` — proves a real change and produces the report.
+5. `prove-and-hand-over` — proves a real change and produces the report;
+   built first because it had just been run by hand on a real change.
+6. `bug-diagnose` — reproduces a real bug and names its cause.
 7. `retro` — turns lessons from that finished change into enforcement.
    Early, so every later step compounds.
 8. `why` — reads the record for a real decision and names its gaps.

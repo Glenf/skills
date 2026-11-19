@@ -19,6 +19,7 @@ npx skills update                      # update everything installed
 | [glen-mode](skills/glen-mode) | Engineering discipline for a code change from first read to handover: make it work, make it right, follow the practice. |
 | [implement](skills/implement) | Implement one settled task end to end: classify build-up or teardown, build and test the slice, simplify, harden, prove the task at its seam, and commit. |
 | [north-star](skills/north-star) | Distill a pile of wants into one north star sentence, with the Five W's beneath it. |
+| [prove-and-hand-over](skills/prove-and-hand-over) | Finish a change whose tasks are done: prove each acceptance criterion on the real surface, run a change-wide wet-or-dry pass and code-review, route the findings, and write the handover and the PR/MR body. |
 | [show-me](skills/show-me) | Show or prove the work — a change, an architecture, a data flow, a design — as ASCII, Markdown, or HTML views built from what was read, with sources cited. |
 | [spec-and-tasks](skills/spec-and-tasks) | Turn an approved spec into vertical slices and one tracker task per slice, each with boundaries, an acceptance check, a proof, a seam, and blockers. |
 | [start-with-why](skills/start-with-why) | Interview the user one question at a time until the real "why" behind a plan, product, decision, project, or narrative is clear. |
