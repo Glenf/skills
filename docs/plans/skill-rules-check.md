@@ -31,6 +31,7 @@ how to enable the hook.
 | Decision | Chosen | Rejected, and why |
 |---|---|---|
 | When the check runs | By hand, and from a tracked pre-commit hook | Hand only: most edits are by agents, and a check nobody runs is skipped. Inside `link-skills.sh`: linking is about one machine, the rules are about the repo. |
+| Hook location | `.githooks/pre-commit`; the mode rule allows `.githooks/` beside `scripts/` | `scripts/hooks/pre-commit`: needs no rule exception, but `.githooks/` is the convention. Decided while slicing, 2026-11-19. |
 | Shape | One script, one function per rule | Rules as data with a generic runner: each rule needs its own logic, so the table would hold code; no second consumer. Partly taste. |
 | Skill size | A warning, never a block | A hard limit: `~200` is guidance, and a skill may be longer if justified. A blocking hook that fails until the `glen-mode` rewrite teaches `--no-verify`. |
 | Size measure | Context: `SKILL.md` body above about 2,500 estimated tokens (bytes ÷ 4); `description:` above 80 words | Lines: `north-star` is 83 lines and about 1,300 tokens, so lines misstate context. A description of 60 words: five skills warn on day one, and a warning that never clears is ignored. |
@@ -47,7 +48,8 @@ how to enable the hook.
    the check exit 1 and name the file: a directory that differs from
    `name:`; a stray file at a skill's root; an absolute path in skill text; a
    skill with no README row; a README row with no skill; an executable file
-   outside a `scripts/` directory. Proof: one broken copy per rule.
+   outside a `scripts/` or `.githooks/` directory. Proof: one broken copy per
+   rule.
 3. In a throwaway clone with the hook enabled, a commit with a hard breach is
    refused, and a commit with only warnings succeeds. Proof: two commits in
    the clone.
