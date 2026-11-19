@@ -1,7 +1,8 @@
 # Conventions for this repo
 
-This repo publishes agent skills for the Skills CLI (`npx skills`). It contains
-nothing else — no application code, no client material.
+This repo publishes agent skills for the Skills CLI (`npx skills`), plus the
+tooling and docs that maintain them (`scripts/`, `.githooks/`, `docs/`). It
+contains nothing else — no application code, no client material.
 
 ## Rules
 
