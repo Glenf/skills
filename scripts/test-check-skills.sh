@@ -98,6 +98,29 @@ printf '#!/bin/sh\n' > "$d/skills/wait-what/scripts/run.sh"; printf '#!/bin/sh\n
 chmod +x "$d/skills/wait-what/scripts/run.sh" "$d/.githooks/pre-commit"; git -C "$d" add skills/wait-what/scripts .githooks
 expect "executables in scripts/ and .githooks/" 0 "" "$d"
 
+# Warnings on the repo: exactly the two known ones.
+out="$(bash "$SCRIPT" 2>&1)"
+want=$'WARN find-the-core\nWARN glen-mode'
+got="$(grep '^WARN' <<<"$out" | cut -d: -f1 | sort)"
+if [ "$got" = "$want" ] && grep -q '^WARN glen-mode: .*token' <<<"$out" && grep -q '^WARN find-the-core: .*description' <<<"$out"; then
+  echo "ok   repo warns on glen-mode body and find-the-core description only"
+else
+  echo "FAIL repo warnings"; echo "$out" | sed 's/^/    /'; fails=$((fails+1))
+fi
+
+# Long body: warns, exit unchanged.
+d="$(clone big-body)"; head -c 12000 /dev/zero | tr '\0' 'x' >> "$d/skills/wait-what/SKILL.md"
+expect "large body warns" 0 '^WARN wait-what: .*token' "$d"
+
+# Long description: warns, exit unchanged.
+d="$(clone long-desc)"; words="$(printf 'word %.0s' $(seq 90))"
+sed -i '' "s/^description: .*/description: $words/" "$d/skills/wait-what/SKILL.md"
+expect "long description warns" 0 '^WARN wait-what: .*description' "$d"
+
+# Clash with an installed skill in a fake HOME: warns, exit unchanged.
+d="$(clone clash)"; fake="$WORK/home"; mkdir -p "$fake/.claude/skills/wait-what"
+HOME="$fake" expect "installed clash warns" 0 '^WARN wait-what: .*clash' "$d"
+
 # Help and bad flag.
 bash "$SCRIPT" --help | grep -q 'check-skills.sh' && echo "ok   --help" || { echo "FAIL --help"; fails=$((fails+1)); }
 bash "$SCRIPT" --bogus >/dev/null 2>&1; [ $? -eq 2 ] && echo "ok   bad flag exits 2" || { echo "FAIL bad flag"; fails=$((fails+1)); }

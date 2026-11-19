@@ -18,9 +18,13 @@ nothing else — no application code, no client material.
 - **Only `SKILL.md` at a skill's root.** Everything else goes in `references/`,
   `scripts/`, `assets/`, or `agents/` (harness metadata, such as Codex's
   `agents/openai.yaml`).
-- **Keep `SKILL.md` short.** It loads into context on every trigger. Past ~200
-  lines, move detail into `references/` and link to it. Never duplicate a
-  reference's content in `SKILL.md`.
+- **Mind the context.** The measure is context, not lines. The `SKILL.md` body
+  loads when the skill triggers: past about 2,500 tokens, move detail into
+  `references/` and link to it. The `description:` loads in every session for
+  every installed skill: keep it under about 80 words. Both are guidance, not
+  hard limits — a longer skill is fine when justified, and
+  `scripts/check-skills.sh` warns, never blocks. Never duplicate a reference's
+  content in `SKILL.md`.
 - **Relative paths only.** Write `references/foo.md`, never an absolute path —
   the install location differs from the repo location.
 - **`description:` is the trigger.** Write it as the conditions under which the

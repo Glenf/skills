@@ -16,22 +16,31 @@ esac
 
 errors=0
 error() { echo "ERROR $1: $2"; errors=$((errors + 1)); }
+warn() { echo "WARN $1: $2"; }
 
-# The `name:` value from the frontmatter, with surrounding quotes removed.
-frontmatter_name() {
-  awk '
+# A frontmatter value on one line: inline, quoted, or a folded/literal block.
+frontmatter_field() {
+  awk -v key="$2" '
     NR == 1 && /^---[[:space:]]*$/ { infm = 1; next }
     infm && /^---[[:space:]]*$/ { exit }
-    infm && /^name:[[:space:]]*/ {
-      sub(/^name:[[:space:]]*/, ""); sub(/[[:space:]]+$/, "")
-      gsub(/^["\047]|["\047]$/, ""); print; exit
+    infm && !grabbing && $0 ~ "^" key ":" {
+      sub("^" key ":[[:space:]]*", ""); sub(/^[>|][-+]?[[:space:]]*$/, "")
+      value = $0; grabbing = 1; next
+    }
+    grabbing && /^[[:space:]]*$/ { next }
+    grabbing && /^[[:space:]]/ { line = $0; sub(/^[[:space:]]+/, "", line); value = value " " line; next }
+    grabbing { exit }
+    END {
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", value)
+      gsub(/^["\047]|["\047]$/, "", value)
+      print value
     }
   ' "$1"
 }
 
 check_name_matches_dir() {
   local dir="$1" file="skills/$1/SKILL.md" name
-  name="$(frontmatter_name "$REPO/$file")"
+  name="$(frontmatter_field "$REPO/$file" name)"
   [ "$name" = "$dir" ] ||
     error "$dir" "name: is '${name:-missing}' in $file; it must match the directory"
 }
@@ -83,12 +92,42 @@ check_executables() {
   done < <(git -C "$REPO" ls-files -s | awk '$1 == "100755" { sub(/^[^\t]*\t/, ""); print }')
 }
 
+# Context, not lines: the body loads when the skill triggers. Warn only; a longer
+# skill is fine when justified.
+check_body_size() {
+  local dir="$1" tokens
+  tokens=$(( $(awk 'NR == 1 && /^---/ { fm = 1; next } fm && /^---/ { fm = 0; body = 1; next } body' \
+    "$REPO/skills/$dir/SKILL.md" | wc -c) / 4 ))
+  [ "$tokens" -le 2500 ] ||
+    warn "$dir" "SKILL.md body is about $tokens tokens (guideline 2,500); move detail into references/ unless the length is justified"
+}
+
+# The description loads in every session, for every installed skill.
+check_description_length() {
+  local dir="$1" words
+  words="$(frontmatter_field "$REPO/skills/$dir/SKILL.md" description | wc -w | tr -d ' ')"
+  [ "$words" -le 80 ] ||
+    warn "$dir" "description is $words words (guideline 80); it loads in every session"
+}
+
+# Installed skills are machine state, not repo state, so a clash only warns.
+check_installed_clashes() {
+  local line path
+  while IFS= read -r line; do
+    path="${line#REFUSE }"; path="${path%%:*}"
+    warn "$(basename "$path")" "clash with an installed skill: ${line#REFUSE }"
+  done < <("$REPO/scripts/link-skills.sh" --dry-run 2>&1 >/dev/null | grep '^REFUSE' || true)
+}
+
 while IFS= read -r dir; do
   check_name_matches_dir "$dir"
   check_root_entries "$dir"
   check_absolute_paths "$dir"
+  check_body_size "$dir"
+  check_description_length "$dir"
 done < <(tracked_skills)
 check_readme_rows
 check_executables
+check_installed_clashes
 
 [ "$errors" -eq 0 ] || exit 1
