@@ -3,9 +3,8 @@
 Implementation of new behaviour: make it work, make it right, make it fast. Use
 it when the task adds behaviour that did not exist, not when the code drifted.
 
-The opposite loop is [`teardown.md`](teardown.md). Build-up adds structure to a
-shape that should shrink; teardown deletes before things have earned a place.
-Applying build-up to drifted code grows the code it should have removed.
+The opposite loop is [`teardown.md`](teardown.md). Applying build-up to drifted
+code adds structure to a shape that should shrink.
 
 ## Before the first edit
 
@@ -147,7 +146,7 @@ Names, comments, and docs are the last pass: earned, not decorative.
 Measure, change one thing, measure again. No optimisation without a measurement,
 and none outside the task. Metric campaigns belong to `hillclimb`, not here.
 
-## Beat 3: prove the task
+## Beat 3: follow the practice
 
 Run the task's proof at the surface it names. Report what was checked and what it
 showed, and name what remains unverified. A passing test proves what it checks,

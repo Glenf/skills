@@ -28,8 +28,8 @@ nothing else — no application code, no client material.
   of the skill the agent sees before deciding to load it.
 - **Use the glossary.** Skills use the terms in `GLOSSARY.md`. When a skill
   introduces or sharpens a term, update the glossary in the same change.
-- **No confidential content.** This repo is public. No client names, no HTGP or
-  Ikoni internal material, no credentials, no personal data.
+- **No confidential content.** This repo is public. No client names, no internal
+  company material, no credentials, no personal data.
 
 ## Frontmatter
 

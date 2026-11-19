@@ -139,7 +139,7 @@ One task per slice, in dependency order, blockers first.
 ## 8. Stop and report
 
 End the stage with the task list, its references, and the frontier: the tasks
-whose blockers are all done. Report them to the user.
+whose status is `ready`. Report them to the user.
 
 Do not invoke `implement` or `triage`, and do not start either. The next stage
 runs only when the user or `glen-mode` asks for it.

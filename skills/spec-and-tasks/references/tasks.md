@@ -106,8 +106,8 @@ the tracker.
 
 ## The frontier
 
-The **frontier** is the set of tasks whose blockers are all done. It changes as
-tasks close.
+The **frontier** is the tasks whose status is `ready`: every blocker done and
+nothing waited on. It changes as tasks close.
 
 - Compute it from the tracker, not from memory, at the end of this stage and
   again when asked.

@@ -11,9 +11,9 @@ absence of tests is cubed, and complexity is added back as a floor.
 
 | Score | Reading |
 |---|---|
-| 1–5 | Low risk. Nothing to do. |
-| 5–30 | Worth a look. Either the branches or the tests are missing. |
-| 30+ | Complex and under-tested. Read the function before adding to it. |
+| Up to 5 | Low risk. Nothing to do. |
+| Over 5, up to 30 | Worth a look. Either the branches or the tests are missing. |
+| Over 30 | Complex and under-tested. Read the function before adding to it. |
 
 - **The floor is CC.** At full coverage the score is exactly CC, so a threshold
   is also a ceiling on complexity: no function above it can pass, however well

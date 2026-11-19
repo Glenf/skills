@@ -80,8 +80,8 @@ points, or effort.
 
 ## 7. Pick the path
 
-The kind decides the stages. The source decides the checks and supplies the
-evidence.
+The kind decides the stages, except a spec task, which enters at `implement`
+whatever its kind. The source decides the checks and supplies the evidence.
 
 | Kind | Path | Skipped |
 |---|---|---|
@@ -101,7 +101,7 @@ rejected with the risk recorded; a retro lesson goes to `retro` with its propose
 home; a PR comment is a change request, a question, or noise. The goal modifiers
 (`find-the-core`, `north-star`, `prototype`, `why`) and the full source checks
 are in [`routing.md`](references/routing.md). Naming the path ends this stage; do
-not start it.
+not start it. If a named stage is not installed, say it is planned and stop.
 
 ## 8. Choose the verdict
 

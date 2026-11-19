@@ -46,7 +46,7 @@ open decision goes back to `spec-and-tasks`; a mechanical change or a diagnosis
 stops and asks for the missing decision. A task that cannot be built without
 choosing a shape goes back to `design`. A bug fix whose cause is not named stops
 here: route it to `bug-diagnose`, or stop and ask for the diagnosis; never guess
-a cause.
+a cause. If a named stage is not installed, say it is planned and stop.
 
 ## 2. Read what binds the task
 
@@ -122,7 +122,7 @@ no present caller. Cite the evidence, name the smallest move, and separate
 contract violations from taste. This is not `code-review`: the independent,
 three-lens review belongs to the next stage.
 
-## Beat 3: prove the task, commit, report
+## Beat 3: follow the practice
 
 **Gate:** the task's proof passes at its seam, the log is complete, and every
 commit says why, what, and how it was proved.

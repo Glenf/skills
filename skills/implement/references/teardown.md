@@ -4,8 +4,8 @@ Recovery of drifted code: simplify, harden, clean. Use it when the code was righ
 for an intent that has since moved. It still runs and still passes its old tests;
 it is wrong against the current direction.
 
-A teardown task deletes before things have earned a place. The opposite loop is
-[`build-up.md`](build-up.md), which adds structure to a shape that should shrink.
+The opposite loop is [`build-up.md`](build-up.md). Applying teardown to
+green-field code deletes things before they have earned a place.
 
 ## Drift, with evidence
 

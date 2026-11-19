@@ -71,8 +71,8 @@ Goal: an operator can see why an import was rejected without reading logs.
 
 The importer logs a rejection and returns a bare failure to the caller
 (`src/import/run.ts:44`). The operator console shows "import failed"
-(`src/console/import.ts:19`). The 2023 ADR chose not to persist reasons
-(`docs/adr/0007-import-audit.md`), so nothing in the record explains why.
+(`src/console/import.ts:19`). The 2023 ADR allows one store for import data
+and forbids a separate audit log (`docs/adr/0007-import-audit.md`).
 
 ## Desired end state
 

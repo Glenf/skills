@@ -37,7 +37,6 @@ ceremony on a local change is waste; improvising a boundary change is worse.
 Gather what already exists before forming an opinion:
 
 - the goal sentence from `north-star`, and the brief from `find-the-core`;
-- the direction from triage: build-up or teardown;
 - the triage path, and which stage handed this over;
 - the code in the affected area, read rather than recalled;
 - `GLOSSARY.md` and any ADR that binds the area;

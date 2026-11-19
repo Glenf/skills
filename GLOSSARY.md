@@ -107,10 +107,10 @@ _Avoid_: Optimisation pass, tuning
 The frozen measurement of the metric before the first change.
 _Avoid_: Starting point, control
 
-**Harness**:
-The repeatable command that produces the metric under a fixed workload, with
-its noise and work count visible.
-_Avoid_: Test, benchmark
+**Bench**:
+The frozen, repeatable command that produces the metric under a fixed workload,
+with its noise and work count visible.
+_Avoid_: Harness, test, benchmark
 
 **Stop predicate**:
 The target plus a floor on attempts; the run ends only when both hold.
@@ -145,8 +145,8 @@ A task whose output another task needs before it can start.
 _Avoid_: Dependency, prerequisite
 
 **Frontier**:
-The tasks whose blockers are all done; the set triage picks the next ready task
-from.
+The tasks whose status is `ready`: every blocker done and nothing waited on.
+Triage reports it; the user or the tracker picks from it.
 _Avoid_: Backlog, queue
 
 **Build-up**:

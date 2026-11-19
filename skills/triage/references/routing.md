@@ -80,7 +80,7 @@ Reproduction belongs to `bug-diagnose`, so a report that does not yet reproduce
 is still routed there.
 
 **Metric target.** Triage checks that a metric and a target exist, and that the
-direction of "better" is stated. Baseline, harness, and stop predicate are
+direction of "better" is stated. Baseline, bench, and stop predicate are
 `hillclimb`'s first work, not a gate here.
 
 ## Entry requirements
@@ -127,7 +127,7 @@ blast radius at all.
 ```
 Verdict: do now
 Item: Rejected imports show no reason code in the console
-Source: ticket
+Source: tracker issue
 Kind: bug
 Size: one module
 Blast radius: the import endpoint, the console view, the rejection tests
@@ -153,8 +153,8 @@ Next action: leave PAY-14 blocked; the trigger is PAY-12 closing
 ```
 Verdict: needs framing/info
 Item: Make the dashboard faster
-Source: request
-Kind: unknown
+Source: user request
+Kind: metric
 Size: unknown
 Blast radius: unknown; the dashboard and whatever backs its numbers
 Validity: valid as a complaint, not yet as work

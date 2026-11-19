@@ -18,7 +18,8 @@ duplication is removed and it becomes the map.
 
 ## Decisions
 
-- No prefix except `glen-mode`.
+- No prefix except `glen-mode`. The third-party `implement` and `triage` from
+  `mattpocock/skills` are uninstalled at a later stage, so these names win.
 - Duplication is accepted until the final rewrite.
 - Main-path skills are model-invoked; off-path skills are user-invoked.
 - A stage ends at its gate and reports its artifact. It does not invoke the
@@ -62,9 +63,9 @@ any work item
      ├── question ───────────────→ answer / show-me
      ├── mechanical ─────────────→ implement → prove-and-hand-over
      ├── bug ────────────────────→ bug-diagnose → implement
-     │                             → code-review → prove-and-hand-over
+     │                             → prove-and-hand-over
      ├── feature / refactor ─────→ design → spec-and-tasks → implement
-     │                             → code-review → prove-and-hand-over
+     │                             → prove-and-hand-over
      ├── metric target ──────────→ hillclimb → prove-and-hand-over
      └── structural ─────────────→ architecture → design → ...
 ```

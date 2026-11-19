@@ -43,9 +43,9 @@ comment unless the user explicitly asks.
 
 ## Actionability
 
-Four things block an item. Each has an owner.
+What stops an item: four kinds, each with an owner.
 
-| Blocker | Example | Trigger that clears it |
+| Kind | Example | Trigger that clears it |
 |---|---|---|
 | Decision | The user has not chosen between two shapes | The choice is made |
 | Fact | Nobody has checked whether the API returns the field | The fact is gathered |
