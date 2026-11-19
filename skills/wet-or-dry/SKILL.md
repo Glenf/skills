@@ -20,7 +20,8 @@ First hit wins:
 
 1. A ref or path the user named. Never widen it.
 2. The branch against its base: `git diff <base>...HEAD`.
-3. Staged and unstaged changes: `git diff HEAD`.
+3. Staged and unstaged changes: `git diff HEAD`, plus files git does not
+   track or ignore (`git ls-files --others --exclude-standard`).
 4. Files edited earlier in this conversation.
 
 Keep human-written code and its tests. Drop prose, config, data, generated and

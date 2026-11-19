@@ -102,7 +102,7 @@ home; a PR comment is a change request, a question, or noise. The goal modifiers
 (`find-the-core`, `north-star`, `prototype`, `why`) and the full source checks
 are in [`routing.md`](references/routing.md). Naming the path ends this stage; do
 not start it. If a named stage is not installed, mark it `(planned)` in the
-path and stop.
+path; the verdict stands, and the path ends before that stage.
 
 ## 8. Choose the verdict
 

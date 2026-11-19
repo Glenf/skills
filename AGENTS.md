@@ -28,6 +28,9 @@ nothing else — no application code, no client material.
   of the skill the agent sees before deciding to load it.
 - **Use the glossary.** Skills use the terms in `GLOSSARY.md`. When a skill
   introduces or sharpens a term, update the glossary in the same change.
+- **Specs and tasks have a home.** Specs go in `docs/plans/`, tasks in
+  `docs/tasks/`, one file per task. `design` and `spec-and-tasks` look here
+  first.
 - **No confidential content.** This repo is public. No client names, no internal
   company material, no credentials, no personal data.
 

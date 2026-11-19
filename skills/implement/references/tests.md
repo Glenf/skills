@@ -28,6 +28,10 @@ You cannot test everything. Naming the seam is how effort lands on the critical
 path and complex logic instead of every edge case. A seam that claims to catch
 everything has not been read.
 
+When the project has no test suite, commit the seam test beside the code it
+tests, such as a test script next to the script. A test kept in a scratch area
+is lost with the session.
+
 When the shape of the interface is itself in question, settle that first. A test
 written against a bad interface certifies the bad interface, and the shape
 belongs to `design`, not to this stage.

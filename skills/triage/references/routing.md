@@ -92,7 +92,7 @@ it.
 
 | Stage | Needs |
 |---|---|
-| `design` | A goal sentence, and the affected area read for blast radius |
+| `design` | A goal sentence, or a request that states what becomes true, and the affected area read for blast radius |
 | `spec-and-tasks` | An approved spec with acceptance criteria and seams |
 | `implement` | A settled task: boundaries, acceptance check, proof, seam; `ready`; blockers done |
 | `bug-diagnose` | A symptom, plus expected and actual behaviour |

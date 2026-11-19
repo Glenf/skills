@@ -99,6 +99,8 @@ lines:
 - the shape you chose, in one or two lines;
 - what the change includes and what it leaves alone;
 - the decisions and risks that could still change the shape;
+- the shape obeys the project's rules, including any rule the change itself
+  adds;
 - the acceptance criteria, one line each.
 
 A written design note starts at `Status: draft`. Mark it `approved` only when

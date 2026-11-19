@@ -149,8 +149,10 @@ declared red intermediate commit is allowed; the task ends green. Do not push, d
 not set an author, and do not include unrelated changes.
 
 Only when the project tracker is in use: add the proof and its result to the
-current task, and mark it done only after the proof passes. Never create,
-reorder, or reprioritise tasks.
+current task, and mark it done only after the proof passes. Then set to `ready`
+each task whose blockers are now all done and that waits on nothing; that
+computes the frontier, it does not reorder. Never create, reorder, or
+reprioritise tasks.
 
 ## Report and stop
 
@@ -179,7 +181,7 @@ invoke `code-review`, `prove-and-hand-over`, `triage`, `spec-and-tasks`, or
 
 - **The design, the spec, or an unnamed bug cause**: a design that fails in code
   returns to `design`, and a bug without a named cause returns to `bug-diagnose`.
-- **The order or the scope**: blockers, slicing, and the frontier belong to
+- **The order or the scope**: blockers, slicing, and the order of the frontier belong to
   `spec-and-tasks` and the tracker. A task too large is split there, not here.
 - **The independent review**: three lenses belong to `code-review`, run by
   `prove-and-hand-over`.
